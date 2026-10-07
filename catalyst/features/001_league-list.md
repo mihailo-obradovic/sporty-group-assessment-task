@@ -2,7 +2,7 @@
 
 ## Status
 
-Approved
+Active
 
 ## Task Weight
 
@@ -132,3 +132,8 @@ Not role-specific.
 - Browser walk of the Examples on the Vercel preview at phone and desktop widths.
 
 ## Verification
+
+2026-10-07, branch `feature/001-league-list`: 56 tests (Vitest, Testing Library, MSW) cover every Examples row; lint, format, typecheck, and `pnpm generate` pass.
+Walked every Examples row in Chrome on the `pnpm generate` build served locally, live API, at 1280 and 390 wide: all pass. The image failure and the 429 were simulated in the browser (a dispatched `error` event; `fetch` returning a plain-text 429), since neither can be triggered live. Reflow checked at 320, 375, 768, 1024, 1280, 1536: no horizontal scroll. The fixture is a separate lazy chunk, absent from the entry bundle.
+The walk found the toast showing ofetch's request line with the API key; fixed with a regression test confirmed failing first.
+Risks: the branch was not pushed before the merge, so CI and a Vercel preview first ran on `master`; badges on the free tier are the most recent of its five oldest seasons.

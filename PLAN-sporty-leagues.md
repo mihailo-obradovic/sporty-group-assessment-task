@@ -32,7 +32,7 @@ TheSportsDB docs: free tier caps all_leagues at 10 results and the seasons looku
 - Stage 1 done: Catalyst adopted, mattpocock-skills routed.
 - Stage 2 done: decision 001 (init design) `Accepted`.
 - Stage 3 done: decision 002 (bootstrap) `Implemented` and merged to `master`, decision 001 `Implemented`. The skeleton is live on Vercel; choices and issues met on the way are in the record's "As built" paragraph and `catalyst/operations.md`.
-- Stage 4 ready: feature 001 `Approved` on `master` and its steps planned below; next is step 1 on a new branch `feature/001-league-list`.
+- Stage 4 done: feature 001 `Active` and merged to `master` (2026-10-07), the mockup's design included (steps 6–9) and the README written. Verification is in the feature document; the walk found and fixed a toast that showed the request URL.
 
 ## Stages
 
