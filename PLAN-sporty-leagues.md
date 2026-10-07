@@ -31,8 +31,8 @@ TheSportsDB docs: free tier caps all_leagues at 10 results and the seasons looku
 
 - Stage 1 done: Catalyst adopted, mattpocock-skills routed.
 - Stage 2 done: decision 001 (init design) `Accepted`.
-- Stage 3 in progress on `decision/002-bootstrap-nuxt-skeleton`: steps 1–3 of decision 002 committed (scaffold, data layer, tests and toolchain); next is step 4 (CI). Choices and issues met on the way are in the record's "As built" paragraph.
-- Stage 4 not started.
+- Stage 3 done: decision 002 (bootstrap) `Implemented` and merged to `master`, decision 001 `Implemented`. The skeleton is live on Vercel; choices and issues met on the way are in the record's "As built" paragraph and `catalyst/operations.md`.
+- Stage 4 not started: next is drafting `catalyst/features/001_league-list.md` on `master`.
 
 ## Stages
 

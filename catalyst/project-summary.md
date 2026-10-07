@@ -22,10 +22,10 @@ Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `
 
 One line per record: type, status, title, link.
 
-| ### | Type        | Status   | Decision                                                                                                                      | Document                                                                             |
-| --- | ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| 001 | init-design | Accepted | Init design: Nuxt + Nuxt UI SPA, GitHub Actions, Vercel static hosting, fixture for the degraded free API, collapsed ceremony | [decisions/001_init-design_league-list.md](decisions/001_init-design_league-list.md) |
-| 002 | bootstrap   | Accepted | Bootstrap: Nuxt + Nuxt UI skeleton, Pinia Colada data layer, Vitest + MSW, CI, Vercel static hosting                          | [decisions/002_bootstrap_nuxt-skeleton.md](decisions/002_bootstrap_nuxt-skeleton.md) |
+| ### | Type        | Status      | Decision                                                                                                                      | Document                                                                             |
+| --- | ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 001 | init-design | Implemented | Init design: Nuxt + Nuxt UI SPA, GitHub Actions, Vercel static hosting, fixture for the degraded free API, collapsed ceremony | [decisions/001_init-design_league-list.md](decisions/001_init-design_league-list.md) |
+| 002 | bootstrap   | Implemented | Bootstrap: Nuxt + Nuxt UI skeleton, Pinia Colada data layer, Vitest + MSW, CI, Vercel static hosting                          | [decisions/002_bootstrap_nuxt-skeleton.md](decisions/002_bootstrap_nuxt-skeleton.md) |
 
 ## Domain Decision Index
 
