@@ -44,7 +44,7 @@ Design only: this record, the Technical Stack table in `project-summary.md`, and
 
 ## Consequences
 
-The bootstrap scaffolds Nuxt with Nuxt UI, the data layer, the test stack, CI, and the Vercel connection in one record, followed by one feature. Phone width is the layout baseline from the first screen. The stock Nuxt UI look is a first pass; a designed look is later work under its own record.
+The bootstrap scaffolds Nuxt with Nuxt UI, the data layer, the test stack, CI, and the Vercel connection in one record, followed by one feature. Phone width is the layout baseline from the first screen. The stock Nuxt UI look is a first pass; a designed look is later work under its own record. Delivered 2026-10-07 inside feature 001 instead, which took the mockup's dark-only design into scope; its tokens are in `annexes/design-system.md`.
 
 The fixture is the one piece of synthetic data and carries the loud-flag and register obligations of Honest Inputs. Setting a premium key (`NUXT_PUBLIC_SPORTSDB_API_KEY`) is a configuration change, not a code change, and triggers the fixture's removal.
 

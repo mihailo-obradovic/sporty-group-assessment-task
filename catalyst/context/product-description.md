@@ -27,7 +27,7 @@ In scope (from the brief):
 Non-goals:
 
 - Accounts, betting, odds, or any bookmaker behaviour beyond the league list — the brief scopes one component.
-- A designed visual identity in the first pass — stock component-library styling first, a design pass later.
+- A light theme — the app is dark only, per the mockup's design (`annexes/design-system.md`).
 - A backend of our own — the app talks to the public API directly.
 
 ## Phases And Priorities
@@ -36,7 +36,7 @@ Non-goals:
 | -------------- | ---------------------------------------------------------------------- | -------- |
 | Requirements   | Everything under "In scope", mobile-friendly, tests, CI, deployed demo | must     |
 | Delivery notes | README section on AI tools used and design decisions                   | must     |
-| Visual design  | A designed layout replacing stock component styling                    | later    |
+| Visual design  | The mockup's dark-only design replacing stock component styling        | done     |
 
 The brief expects about 90 minutes of work; anything unfinished is explained in the delivery notes rather than hidden.
 
