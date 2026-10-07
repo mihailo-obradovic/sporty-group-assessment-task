@@ -60,6 +60,8 @@ Flow: `catalyst/workflows/init-design.md`; template `catalyst/decisions/_templat
 - Degraded free API (Facts) and the response: code against the documented full shape with Alternate name optional; runtime fixture mode `?source=fixture` with a visible banner, default settable by env; registered in `KNOWN_FAKES.md`; removal condition "premium key (`NUXT_PUBLIC_SPORTSDB_API_KEY`) or free tier restored".
 - Open Questions empty at approval. Status `Proposed` → `Accepted` on `master` after the user approves; it flips to `Implemented` when stage 3 lands.
 
+In the same change, link the record from the "Installed pipeline" line of the root `AGENTS.md` ("adopted by [decision 001](catalyst/decisions/001_init-design_league-list.md)") and name it on the Agent adapters line of `project-summary.md`.
+
 Commit (ask first) the record and its `project-summary.md` row on `master`.
 
 ### Stage 3 — Bootstrap record and the Nuxt scaffold
