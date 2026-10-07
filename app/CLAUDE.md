@@ -7,7 +7,7 @@ The whole frontend: a Nuxt 4 + Nuxt UI single-page app (`ssr: false`) built to s
 - `app.vue` — the shell: `<u-app>` around `<u-main>` around the page.
 - `error.vue` — the one fatal-error page; renders what the raising site passes in `data`.
 - `pages/` — file-based routes; `index.vue` is the only page.
-- `components/league/` — the League list's pieces: `LeagueFilters` (search and Sport select, reading and writing the URL through `useLeagueFilters`), `LeagueList`, `LeagueCard` (expands to show `LeagueBadgePanel`, which looks up the Season badge), and `FixtureBanner` (shown whenever `source=fixture`). Imported explicitly, never auto-registered by name.
+- `components/league/` — the League list's pieces: `LeagueFilters` (search and Sport select, reading and writing the URL through `useLeagueFilters`), `LeagueList`, `LeagueCard` (expands to show `LeagueBadgePanel`, which looks up the Season badge), `FixtureBanner` (shown whenever `source=fixture`), and `LeagueSourceToggle` (the top bar's Live / Sample switch). Imported explicitly, never auto-registered by name.
 - `config/nuxt-ui/` — one vendored theme per Nuxt UI component the app renders, wired in `app.config.ts` and typed in `types/nuxt-ui.d.ts`; every deviation from upstream is annotated (`customization.md`).
 - `composables/useAppQuery.ts` — the query wrapper every server read goes through.
 - `composables/useLeagueFilters.ts` — the page's filter and source state, parsed from and written to the URL query.

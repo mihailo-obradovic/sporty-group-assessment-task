@@ -340,12 +340,60 @@ describe('Fixture banner', () => {
     expect(await screen.findByText('Sample data')).toBeTruthy();
 
     await fireEvent.click(
-      screen.getByRole('button', { name: 'Show live data' })
+      screen.getByRole('button', { name: 'Show the live list' })
     );
 
     await vi.waitFor(() =>
       expect(useRoute().query).toEqual({ q: 'league', source: 'live' })
     );
     expect(screen.queryByText('Sample data')).toBeNull();
+  });
+
+  it('marks the active source and switches with the toggle, keeping the search and clearing the Sport', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    await renderPage({ q: 'league', sport: 'Soccer' });
+    await findLeagueNames();
+
+    const live = screen.getByRole('button', { name: 'Live' });
+    const sample = screen.getByRole('button', { name: 'Sample' });
+    expect(live.getAttribute('aria-pressed')).toBe('true');
+    expect(sample.getAttribute('aria-pressed')).toBe('false');
+
+    await fireEvent.click(sample);
+
+    await vi.waitFor(() =>
+      expect(useRoute().query).toEqual({ q: 'league', source: 'fixture' })
+    );
+    expect(await screen.findByText('Sample data')).toBeTruthy();
+    expect(sample.getAttribute('aria-pressed')).toBe('true');
+  });
+});
+
+describe('Result count', () => {
+  afterEach(() => {
+    cleanup();
+    const queryCache = useQueryCache();
+
+    for (const entry of queryCache.getEntries()) {
+      queryCache.remove(entry);
+    }
+  });
+
+  it('counts every fixture League with no filters', async () => {
+    await renderPage({ source: 'fixture' });
+    await findLeagueNames();
+
+    expect(screen.getByRole('status').textContent).toMatch(
+      /^\s*19\s*leagues\s*$/
+    );
+  });
+
+  it('counts what the filters leave', async () => {
+    await renderPage({ source: 'fixture', sport: 'Basketball', q: 'nba' });
+    await findLeagueNames();
+
+    expect(screen.getByRole('status').textContent).toMatch(
+      /^\s*2\s*leagues\s*$/
+    );
   });
 });

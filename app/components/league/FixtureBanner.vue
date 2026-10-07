@@ -14,12 +14,20 @@ import type { ButtonProps } from '@nuxt/ui';
 
 const { setSource } = useLeagueFilters();
 
-// * Sets `source=live` explicitly, so it works where the configured default is `fixture`
+// * Sets `source=live` explicitly, so it works where the configured default is `fixture`; a link, not a red action, per the mockup
 const actions: ButtonProps[] = [
-  { label: 'Show live data', icon: 'i-lucide-radio', onClick: showLiveData }
+  {
+    label: 'Show the live list',
+    color: 'neutral',
+    variant: 'link',
+    // * Alert actions default to xs (24px); md keeps the link a comfortable touch target
+    size: 'md',
+    trailingIcon: 'i-lucide-arrow-right',
+    onClick: showLiveList
+  }
 ];
 
-function showLiveData() {
+function showLiveList() {
   setSource('live');
 }
 </script>

@@ -1,46 +1,69 @@
 <template>
-  <u-container class="flex flex-col gap-6 py-8">
-    <h1 class="text-2xl font-semibold">Sporty leagues</h1>
+  <div class="flex flex-col">
+    <header class="border-b border-accented">
+      <u-container class="flex items-center justify-between gap-3 py-3.5">
+        <h1
+          class="flex items-center gap-2.5 font-display text-wordmark font-extrabold italic"
+        >
+          <span aria-hidden="true" class="slant-bar" />
+          Sporty Leagues
+        </h1>
+
+        <LeagueSourceToggle />
+      </u-container>
+    </header>
 
     <!-- ! The fixture list is never shown without this banner (feature 001, KNOWN_FAKES.md) -->
-    <FixtureBanner v-if="isFixture" />
+    <u-container v-if="isFixture" class="pt-4">
+      <FixtureBanner />
+    </u-container>
 
-    <LeagueFilters :sports="sports" />
-
-    <ul
-      v-if="isLoadingList"
-      aria-busy="true"
-      aria-label="Loading leagues"
-      class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+    <!-- * Sticks to the top of main, the page's only scrolling region (page-layout.md) -->
+    <div
+      class="sticky top-0 z-20 border-b border-accented bg-default/90 backdrop-blur"
     >
-      <li v-for="placeholder in SKELETON_COUNT" :key="placeholder">
-        <u-skeleton class="h-32 w-full" />
-      </li>
-    </ul>
+      <u-container class="py-3.5">
+        <LeagueFilters :sports="sports" :count="count" />
+      </u-container>
+    </div>
 
-    <u-alert
-      v-else-if="error"
-      color="error"
-      variant="subtle"
-      icon="i-lucide-circle-alert"
-      title="Could not load the leagues"
-      description="TheSportsDB did not answer as expected. Try again in a moment."
-      :actions="errorActions"
-    />
+    <u-container class="py-5">
+      <ul
+        v-if="isLoadingList"
+        aria-busy="true"
+        aria-label="Loading leagues"
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+      >
+        <li v-for="placeholder in SKELETON_COUNT" :key="placeholder">
+          <u-skeleton class="h-32 w-full" />
+        </li>
+      </ul>
 
-    <u-empty
-      v-else-if="emptyState"
-      icon="i-lucide-trophy"
-      :title="emptyState.title"
-      :description="emptyState.description"
-      :actions="emptyState.actions"
-    />
+      <u-alert
+        v-else-if="error"
+        color="error"
+        variant="subtle"
+        icon="i-lucide-circle-alert"
+        title="Could not load the leagues"
+        description="TheSportsDB did not answer as expected. Try again in a moment."
+        :actions="errorActions"
+      />
 
-    <LeagueList v-else :leagues="visibleLeagues" />
-  </u-container>
+      <u-empty
+        v-else-if="emptyState"
+        icon="i-lucide-trophy"
+        :title="emptyState.title"
+        :description="emptyState.description"
+        :actions="emptyState.actions"
+      />
+
+      <LeagueList v-else :leagues="visibleLeagues" />
+    </u-container>
+  </div>
 </template>
 
 <script setup lang="ts">
+import LeagueSourceToggle from '@/components/league/LeagueSourceToggle.vue';
 import FixtureBanner from '@/components/league/FixtureBanner.vue';
 import LeagueFilters from '@/components/league/LeagueFilters.vue';
 import LeagueList from '@/components/league/LeagueList.vue';
@@ -72,6 +95,10 @@ const sports = computed(() => listSports(leagues.value ?? []));
 
 const visibleLeagues = computed(() =>
   filterLeagues(leagues.value ?? [], filters.value)
+);
+
+const count = computed(() =>
+  isLoadingList.value || error.value ? null : visibleLeagues.value.length
 );
 
 const errorActions: ButtonProps[] = [

@@ -1,21 +1,32 @@
 <template>
-  <div class="flex flex-col gap-3 md:flex-row">
+  <div
+    class="grid grid-cols-1 items-center gap-2.5 md:grid-cols-[minmax(0,1fr)_14rem_auto]"
+  >
     <u-input
       v-model="search"
       type="search"
       icon="i-lucide-search"
       placeholder="Search leagues"
       aria-label="Search leagues by name"
-      class="md:flex-1"
     />
 
     <u-select
       :model-value="selectedSport"
       :items="sportItems"
       aria-label="Filter by Sport"
-      class="md:w-64"
       @update:model-value="handleSportSelect"
     />
+
+    <!-- * A reserved cell: invisible while the list loads, so the bar does not shift when the number arrives -->
+    <p
+      role="status"
+      class="font-display text-count font-bold whitespace-nowrap tabular-nums"
+      :class="{ invisible: count === null }"
+      :aria-hidden="count === null"
+    >
+      {{ count ?? 0 }}
+      <span class="ms-1 font-sans text-sm font-normal text-muted">leagues</span>
+    </p>
   </div>
 </template>
 
@@ -24,6 +35,8 @@ import { watchDebounced } from '@vueuse/core';
 
 const props = defineProps<{
   sports: string[];
+  // * `null` while the list loads
+  count: number | null;
 }>();
 
 const { filters, setQuery, setSport } = useLeagueFilters();
