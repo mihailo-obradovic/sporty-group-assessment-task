@@ -66,7 +66,7 @@ Not role-specific.
 | `/?q=league&sport=Soccer`, press Sample   | `?q=league&source=fixture`; banner visible; Sample pressed           | toggle keeps `q`, resets `sport` |
 | `/?sport=Basketball` (live)               | empty state with Clear filters; select shows Basketball              | unknown Sport kept               |
 | `/?source=bogus`                          | env-default source                                                   | `.catch()` default               |
-| expand 4328 (English Premier League)      | spinner, then the latest badged season's image + label               |                                  |
+| expand 4328 (English Premier League)      | loading plate, then the latest badged season's image + label         |                                  |
 | expand 4329 (no season has a badge)       | "No badge for this League"                                           | real live case                   |
 | expand, collapse, expand                  | badge shown, no second request                                       | cached per League                |
 | expand in fixture, switch to live, expand | no second request                                                    | key is `idLeague`                |

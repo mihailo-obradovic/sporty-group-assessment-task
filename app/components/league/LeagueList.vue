@@ -1,7 +1,7 @@
 <template>
   <ul
     aria-label="Leagues"
-    class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+    class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3"
   >
     <li v-for="league in leagues" :key="league.idLeague">
       <LeagueCard :league="league" />

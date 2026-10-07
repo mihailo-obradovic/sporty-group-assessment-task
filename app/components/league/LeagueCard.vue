@@ -1,26 +1,22 @@
 <template>
-  <u-card class="relative h-full">
-    <div class="flex flex-col gap-2">
-      <h2 class="text-lg font-semibold">
-        <!-- * The toggle stretches over the whole card, so a click anywhere on it expands or collapses -->
-        <button
-          type="button"
-          :aria-expanded="isExpanded"
-          :aria-controls="panelId"
-          class="flex w-full items-start justify-between gap-2 text-left after:absolute after:inset-0 after:rounded-lg focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-primary"
-          @click="toggle"
-        >
-          {{ league.strLeague }}
+  <u-card :data-expanded="isExpanded" class="h-full">
+    <div class="flex flex-col gap-2.5">
+      <div class="flex items-start justify-between gap-2.5">
+        <h2 class="font-display text-league font-bold italic">
+          <!-- * The toggle stretches over the whole card, so a tap anywhere on it expands or collapses -->
+          <button
+            type="button"
+            :aria-expanded="isExpanded"
+            :aria-controls="panelId"
+            class="text-left after:absolute after:inset-0 after:rounded-xl focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-primary"
+            @click="toggle"
+          >
+            {{ league.strLeague }}
+          </button>
+        </h2>
 
-          <u-icon
-            :name="toggleIcon"
-            aria-hidden="true"
-            class="mt-1 size-5 shrink-0 text-muted"
-          />
-        </button>
-      </h2>
-
-      <u-badge :label="league.strSport" class="self-start" />
+        <u-badge :label="league.strSport" class="mt-0.5 shrink-0" />
+      </div>
 
       <p v-if="league.strLeagueAlternate" class="text-sm text-muted">
         {{ league.strLeagueAlternate }}
@@ -35,6 +31,13 @@
         />
       </div>
     </div>
+
+    <u-icon
+      name="i-lucide-chevron-down"
+      aria-hidden="true"
+      class="absolute end-3.5 bottom-3 size-5 text-muted motion-safe:transition-transform"
+      :class="{ 'rotate-180': isExpanded }"
+    />
   </u-card>
 </template>
 
@@ -50,10 +53,6 @@ const props = defineProps<{
 const isExpanded = ref(false);
 
 const panelId = computed(() => `league-${props.league.idLeague}-badge`);
-
-const toggleIcon = computed(() =>
-  isExpanded.value ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'
-);
 
 function toggle() {
   isExpanded.value = !isExpanded.value;

@@ -32,10 +32,19 @@
         v-if="isLoadingList"
         aria-busy="true"
         aria-label="Loading leagues"
-        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+        class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3"
       >
         <li v-for="placeholder in SKELETON_COUNT" :key="placeholder">
-          <u-skeleton class="h-32 w-full" />
+          <!-- * The card's surface and size, so the grid does not jump when the Leagues arrive -->
+          <div
+            class="flex min-h-27 flex-col gap-3 rounded-xl bg-elevated/50 py-4 ps-5.5 pe-4.5 ring ring-accented"
+          >
+            <u-skeleton class="h-6 w-[70%]" />
+
+            <u-skeleton class="h-3.5 w-full" />
+
+            <u-skeleton class="h-3.5 w-[45%]" />
+          </div>
         </li>
       </ul>
 
@@ -55,7 +64,13 @@
         :title="emptyState.title"
         :description="emptyState.description"
         :actions="emptyState.actions"
-      />
+      >
+        <template #title>
+          <span class="font-display text-empty font-bold italic">
+            {{ emptyState.title }}
+          </span>
+        </template>
+      </u-empty>
 
       <LeagueList v-else :leagues="visibleLeagues" />
     </u-container>
@@ -102,7 +117,14 @@ const count = computed(() =>
 );
 
 const errorActions: ButtonProps[] = [
-  { label: 'Retry', icon: 'i-lucide-rotate-cw', onClick: retry }
+  // * 44px touch target (annexes/design-system.md, Sizing)
+  {
+    label: 'Retry',
+    icon: 'i-lucide-rotate-cw',
+    size: 'xl',
+    class: 'min-h-11',
+    onClick: retry
+  }
 ];
 
 const emptyState = computed(() => {
@@ -117,7 +139,14 @@ const emptyState = computed(() => {
     return {
       title: 'No leagues match these filters',
       description: 'Try another name or Sport.',
-      actions: [{ label: 'Clear filters', onClick: handleClearFilters }]
+      actions: [
+        {
+          label: 'Clear filters',
+          size: 'xl' as const,
+          class: 'min-h-11',
+          onClick: handleClearFilters
+        }
+      ]
     };
   }
   return null;

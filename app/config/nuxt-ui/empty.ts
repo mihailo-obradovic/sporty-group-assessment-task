@@ -1,4 +1,4 @@
-// * Nuxt UI Empty theme — upstream defaults from @nuxt/ui 4.11.3, no deviations yet
+// * Nuxt UI Empty theme — upstream defaults from @nuxt/ui 4.11.3, one deviation (defaultVariants.variant)
 import type { EmptyConfig } from '../../types/nuxt-ui';
 
 export default {
@@ -69,7 +69,7 @@ export default {
     }
   },
   defaultVariants: {
-    variant: 'outline',
+    variant: 'naked', // * Default: 'outline' — the empty state sits in the grid's space, unboxed, per the mockup
     size: 'md'
   }
 } satisfies EmptyConfig;

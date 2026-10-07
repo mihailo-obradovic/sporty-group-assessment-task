@@ -1,9 +1,11 @@
-// * Nuxt UI Badge theme — upstream defaults from @nuxt/ui 4.11.3, no deviations yet
+// * Nuxt UI Badge theme — upstream defaults from @nuxt/ui 4.11.3, deviations: base slant, defaultVariants color and variant (the Sport tag is its only call site)
 import type { BadgeConfig } from '../../types/nuxt-ui';
 
 export default {
   slots: {
-    base: 'font-medium inline-flex items-center',
+    // * Changes: the Sport tag's slant, text counter-skewed upright (annexes/design-system.md, The slant)
+    // * Default: 'font-medium inline-flex items-center'
+    base: 'slant-tag font-semibold tracking-wide inline-flex items-center',
     label: 'truncate',
     leadingIcon: 'shrink-0',
     leadingAvatar: 'shrink-0',
@@ -236,8 +238,8 @@ export default {
     }
   ],
   defaultVariants: {
-    color: 'primary',
-    variant: 'solid',
+    color: 'neutral', // * Default: 'primary' — red is for actions only
+    variant: 'outline', // * Default: 'solid'
     size: 'md'
   }
 } satisfies BadgeConfig;
