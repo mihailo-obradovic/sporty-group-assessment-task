@@ -245,7 +245,7 @@ Nuxt UI supports 50+ locales. Set the locale on `UApp` — all components inheri
 
 ```vue
 <script setup lang="ts">
-import { fr } from '@nuxt/ui/locale'
+import { fr } from '@nuxt/ui/locale';
 </script>
 
 <template>
@@ -303,16 +303,16 @@ export default defineNuxtConfig({
 
 ```vue
 <script setup lang="ts">
-import * as locales from '@nuxt/ui/locale'
+import * as locales from '@nuxt/ui/locale';
 
-const { locale } = useI18n()
+const { locale } = useI18n();
 
-const lang = computed(() => locales[locale.value]?.code)
-const dir = computed(() => locales[locale.value]?.dir)
+const lang = computed(() => locales[locale.value]?.code);
+const dir = computed(() => locales[locale.value]?.dir);
 
 useHead({
   htmlAttrs: { lang, dir }
-})
+});
 </script>
 
 <template>
@@ -338,12 +338,14 @@ For custom color mode UI, use `useColorMode` with `ClientOnly` to avoid hydratio
 
 ```vue
 <script setup lang="ts">
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 
 const isDark = computed({
   get: () => colorMode.value === 'dark',
-  set: (v) => { colorMode.preference = v ? 'dark' : 'light' }
-})
+  set: (v) => {
+    colorMode.preference = v ? 'dark' : 'light';
+  }
+});
 </script>
 
 <template>

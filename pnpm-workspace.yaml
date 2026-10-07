@@ -2,4 +2,5 @@ minimumReleaseAge: 1440
 
 allowBuilds:
   esbuild: false
+  msw: false
   vue-demi: false

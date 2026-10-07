@@ -13,10 +13,7 @@
     "correctness": "error"
   },
   "rules": {
-    "curly": [
-      "error",
-      "all"
-    ],
+    "curly": ["error", "all"],
     "no-restricted-globals": [
       "error",
       {
@@ -24,10 +21,7 @@
         "message": "Use Temporal (conventions/code-style.md)."
       }
     ],
-    "func-style": [
-      "error",
-      "declaration"
-    ],
+    "func-style": ["error", "declaration"],
     "prefer-arrow-callback": "error",
     "no-nested-ternary": "error"
   }

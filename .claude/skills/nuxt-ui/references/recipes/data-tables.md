@@ -6,23 +6,27 @@ Complete patterns for displaying and managing tabular data.
 
 ```vue
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
+import type { TableColumn } from '@nuxt/ui';
 
 const data = ref([
   { name: 'Alice', email: 'alice@example.com', role: 'Admin' },
   { name: 'Bob', email: 'bob@example.com', role: 'Editor' }
-])
+]);
 
-const columns: TableColumn<typeof data.value[number]>[] = [{
-  accessorKey: 'name',
-  header: 'Name'
-}, {
-  accessorKey: 'email',
-  header: 'Email'
-}, {
-  accessorKey: 'role',
-  header: 'Role'
-}]
+const columns: TableColumn<(typeof data.value)[number]>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Name'
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email'
+  },
+  {
+    accessorKey: 'role',
+    header: 'Role'
+  }
+];
 </script>
 
 <template>
@@ -34,15 +38,20 @@ const columns: TableColumn<typeof data.value[number]>[] = [{
 
 ```vue
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
+import type { TableColumn } from '@nuxt/ui';
 
-const search = ref('')
-const roleFilter = ref('All')
+const search = ref('');
+const roleFilter = ref('All');
 
 const rows = ref([
-  { name: 'Alice', email: 'alice@example.com', role: 'Admin', status: 'Active' },
+  {
+    name: 'Alice',
+    email: 'alice@example.com',
+    role: 'Admin',
+    status: 'Active'
+  },
   { name: 'Bob', email: 'bob@example.com', role: 'Editor', status: 'Inactive' }
-])
+]);
 
 const columns: TableColumn[] = [
   { accessorKey: 'name', header: 'Name' },
@@ -50,15 +59,18 @@ const columns: TableColumn[] = [
   { accessorKey: 'role', header: 'Role' },
   { accessorKey: 'status', header: 'Status' },
   { id: 'actions' }
-]
+];
 
 const filteredRows = computed(() => {
-  return rows.value.filter(row => {
-    const matchesSearch = !search.value || row.name.toLowerCase().includes(search.value.toLowerCase())
-    const matchesRole = roleFilter.value === 'All' || row.role === roleFilter.value
-    return matchesSearch && matchesRole
-  })
-})
+  return rows.value.filter((row) => {
+    const matchesSearch =
+      !search.value ||
+      row.name.toLowerCase().includes(search.value.toLowerCase());
+    const matchesRole =
+      roleFilter.value === 'All' || row.role === roleFilter.value;
+    return matchesSearch && matchesRole;
+  });
+});
 </script>
 
 <template>
@@ -68,10 +80,17 @@ const filteredRows = computed(() => {
 
       <UDashboardToolbar>
         <template #left>
-          <UInput v-model="search" icon="i-lucide-search" placeholder="Search users..." />
+          <UInput
+            v-model="search"
+            icon="i-lucide-search"
+            placeholder="Search users..."
+          />
         </template>
         <template #right>
-          <USelect v-model="roleFilter" :items="['All', 'Admin', 'Editor', 'Viewer']" />
+          <USelect
+            v-model="roleFilter"
+            :items="['All', 'Admin', 'Editor', 'Viewer']"
+          />
         </template>
       </UDashboardToolbar>
     </template>
@@ -79,14 +98,31 @@ const filteredRows = computed(() => {
     <template #body>
       <UTable :data="filteredRows" :columns="columns">
         <template #status-cell="{ row }">
-          <UBadge :color="row.original.status === 'Active' ? 'success' : 'neutral'" :label="row.original.status" variant="subtle" />
+          <UBadge
+            :color="row.original.status === 'Active' ? 'success' : 'neutral'"
+            :label="row.original.status"
+            variant="subtle"
+          />
         </template>
 
         <template #actions-cell="{ row }">
           <UDropdownMenu
             :items="[
-              [{ label: 'Edit', icon: 'i-lucide-pencil', onSelect: () => edit(row.original) }],
-              [{ label: 'Delete', icon: 'i-lucide-trash', color: 'error', onSelect: () => remove(row.original) }]
+              [
+                {
+                  label: 'Edit',
+                  icon: 'i-lucide-pencil',
+                  onSelect: () => edit(row.original)
+                }
+              ],
+              [
+                {
+                  label: 'Delete',
+                  icon: 'i-lucide-trash',
+                  color: 'error',
+                  onSelect: () => remove(row.original)
+                }
+              ]
             ]"
           >
             <UButton icon="i-lucide-ellipsis" color="neutral" variant="ghost" />
@@ -104,16 +140,22 @@ Row selection uses TanStack Table's `rowSelection` state — a `Record<string, b
 
 ```vue
 <script setup lang="ts">
-const table = useTemplateRef('table')
-const rowSelection = ref<Record<string, boolean>>({})
+const table = useTemplateRef('table');
+const rowSelection = ref<Record<string, boolean>>({});
 </script>
 
 <template>
-  <UTable ref="table" v-model:row-selection="rowSelection" :data="data" :columns="columns" />
+  <UTable
+    ref="table"
+    v-model:row-selection="rowSelection"
+    :data="data"
+    :columns="columns"
+  />
 
   <div class="px-4 py-3.5 text-sm text-muted">
     {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-    {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} row(s) selected.
+    {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} row(s)
+    selected.
   </div>
 </template>
 ```
@@ -155,14 +197,14 @@ Use `v-model:pagination` on `UTable` with TanStack's `getPaginationRowModel`, th
 
 ```vue
 <script setup lang="ts">
-import { getPaginationRowModel } from '@tanstack/vue-table'
+import { getPaginationRowModel } from '@tanstack/vue-table';
 
-const table = useTemplateRef('table')
+const table = useTemplateRef('table');
 
 const pagination = ref({
   pageIndex: 0,
   pageSize: 5
-})
+});
 </script>
 
 <template>
@@ -191,11 +233,15 @@ Use `status === 'pending' || status === 'idle'` for loading state — `idle` cov
 
 ```vue
 <script setup lang="ts">
-const { data, status } = useLazyFetch('/api/users', { server: false })
+const { data, status } = useLazyFetch('/api/users', { server: false });
 </script>
 
 <template>
-  <UTable :data="data" :columns="columns" :loading="status === 'pending' || status === 'idle'" />
+  <UTable
+    :data="data"
+    :columns="columns"
+    :loading="status === 'pending' || status === 'idle'"
+  />
 </template>
 ```
 
@@ -203,20 +249,28 @@ For server-side pagination:
 
 ```vue
 <script setup lang="ts">
-const page = ref(1)
+const page = ref(1);
 
 const { data, status } = await useAsyncData(
   'users',
   () => $fetch('/api/users', { query: { page: page.value } }),
   { watch: [page] }
-)
+);
 </script>
 
 <template>
-  <UTable :data="data?.items" :columns="columns" :loading="status === 'pending'" />
+  <UTable
+    :data="data?.items"
+    :columns="columns"
+    :loading="status === 'pending'"
+  />
 
   <div class="flex justify-end p-4">
-    <UPagination v-model:page="page" :total="data?.total" :items-per-page="data?.pageSize" />
+    <UPagination
+      v-model:page="page"
+      :total="data?.total"
+      :items-per-page="data?.pageSize"
+    />
   </div>
 </template>
 ```

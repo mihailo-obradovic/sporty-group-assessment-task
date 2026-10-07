@@ -20,10 +20,10 @@ A public, 100% runnable repo at `mihailo-obradovic/sporty-group-assessment-task`
 
 ## Facts (verified 2026-10-07)
 
-| Endpoint | Assignment expects | Live free tier (keys `3` and `123`) |
-| --- | --- | --- |
-| `all_leagues.php` | many leagues, several sports, `strLeagueAlternate` | 5 leagues, all Soccer; fields `idLeague`, `strLeague`, `strSport` only |
-| `search_all_seasons.php?badge=1&id=<id>` | seasons with badges | works: `[{strSeason, strBadge}]` (e.g. id 4328 → 5 seasons, all with badges) |
+| Endpoint                                 | Assignment expects                                 | Live free tier (keys `3` and `123`)                                          |
+| ---------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `all_leagues.php`                        | many leagues, several sports, `strLeagueAlternate` | 5 leagues, all Soccer; fields `idLeague`, `strLeague`, `strSport` only       |
+| `search_all_seasons.php?badge=1&id=<id>` | seasons with badges                                | works: `[{strSeason, strBadge}]` (e.g. id 4328 → 5 seasons, all with badges) |
 
 TheSportsDB docs: free tier caps all_leagues at 10 results and the seasons lookup at 5; premium raises both. CORS is open (`access-control-allow-origin: *`). The repo is on `master` with remote `origin` on GitHub.
 
