@@ -121,7 +121,7 @@ Not role-specific.
 - `app/services/leagues.api.test.ts` (MSW): blank Alternate name (missing, `null`, `""`); `leagues: null` and `seasons: null` → none; string `seasons` and a League missing a field → `ResponseShapeError`.
 - `app/composables/useLeagueFilters.test.ts`: defaults and `.catch()` fallbacks; both filters `replace`, never `push`; source switch clears `sport`.
 - `app/services/queries/useLeagueQueries.test.ts` (MSW): one all-leagues request across remounts; fixture source makes no all-leagues request; seasons once per League across sources; string `seasons` and 429 surface as errors.
-- `app/components/league/LeagueList.test.ts`: with filters applied only matches render; empty state and Clear filters; expanding a card shows the badge.
+- `app/components/league/LeagueList.test.ts` (the page, MSW): with filters applied only matches render; unknown Sport kept; both empty states and Clear filters; debounced search reaches the URL; error and Retry; expanding a card shows the badge.
 - Browser walk of the Examples on the Vercel preview at phone and desktop widths.
 
 ## Verification

@@ -1,2 +1,16 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
+
+/* * Link 1 of the height chain: the shell is exactly the viewport and never scrolls; main does (page-layout.md) */
+html,
+body,
+#__nuxt {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* * UApp renders no element of its own, so #__nuxt is the layout column */
+#__nuxt {
+    display: flex;
+    flex-direction: column;
+}
