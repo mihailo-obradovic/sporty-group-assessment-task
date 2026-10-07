@@ -42,7 +42,7 @@ Non-goals: matching the Alternate name in search (the brief says name; the live 
 
 - On load the page gets all Leagues for the active source once; loading shows skeleton cards.
 - Leagues sort by name, case-insensitive. Search matches a case-insensitive substring of the League name after trimming. The Sport select offers "All" plus the distinct Sports in the loaded data, sorted; a `sport` value absent from the data still shows as selected. Filters combine (AND).
-- Typing updates `q` via `router.replace`, debounced ~250 ms; choosing a Sport updates `sport` via `router.push`. Reload, bookmark, and shared link restore both.
+- Typing updates `q`, debounced ~250 ms; choosing a Sport updates `sport` at once. Both replace the history entry, never push one, so Back leaves the page rather than stepping through filters. Reload, bookmark, and shared link restore both.
 - No match → an empty state with "Clear filters", which removes `q` and `sport`.
 - Clicking a card expands it and looks up that League's seasons. The badge shown is the **most recent** season with a non-null `strBadge` (the API lists oldest first), labelled with its `strSeason`. A second click collapses. Several cards may be open. Re-expanding shows the cached result without a request.
 - `source=fixture` replaces only the all-leagues list with the fixture and shows the banner; badges still come from the live seasons lookup. The banner link sets `source=live` explicitly, so it works where the env default is `fixture`. Switching source keeps `q` and resets `sport`.
@@ -99,7 +99,8 @@ Not role-specific.
 
 - `app/pages/index.vue`: the screen.
 - `app/composables/useLeagueFilters.ts`: URL state schema and setters.
-- `app/services/leagues.api.ts`: response schemas and fetch functions.
+- `app/types/league.ts`: League and Season schemas and their types.
+- `app/services/leagues.api.ts`: response envelope schemas and fetch functions.
 - `app/services/queries/useLeagueQueries.ts`: `useLeaguesQuery(source)`, `useSeasonBadgeQuery(idLeague, enabled)`.
 - `app/utils/filterLeagues.ts`: pure sort, filter, Sport options, badge pick.
 - `app/components/league/`: card, list, filters, badge panel, fixture banner.
@@ -109,16 +110,18 @@ Not role-specific.
 
 - Decision 002's data layer: `fetcher`, `useAppQuery`, `handleApiError`, `parseResponse`.
 - TheSportsDB v1 free tier, key from `NUXT_PUBLIC_SPORTSDB_API_KEY`.
+- `@vueuse/core` for the search debounce (an approved library of the Nuxt module).
 - Decision 001: fixture mode, removed on a premium key or a restored free tier.
 
 ## Open Questions
 
 ## Tests
 
-- `app/utils/filterLeagues.spec.ts`: sort; trimmed case-insensitive substring; Sport filter; AND; unknown Sport; distinct sorted options; blank Alternate name; badge pick (most recent non-null, all null, `null` seasons).
-- `app/composables/useLeagueFilters.spec.ts`: defaults and `.catch()` fallbacks; `replace` vs `push`; source switch clears `sport`.
-- `app/services/queries/useLeagueQueries.spec.ts` (MSW): one all-leagues request across remounts; fixture source makes no all-leagues request; seasons once per League across sources; string `seasons` and 429 surface as errors.
-- `app/components/league/LeagueList.spec.ts`: with filters applied only matches render; empty state and Clear filters; expanding a card shows the badge.
+- `app/utils/filterLeagues.test.ts`: sort; trimmed case-insensitive substring; Sport filter; AND; unknown Sport; distinct sorted options; badge pick (most recent non-null, all null, no seasons).
+- `app/services/leagues.api.test.ts` (MSW): blank Alternate name (missing, `null`, `""`); `leagues: null` and `seasons: null` → none; string `seasons` and a League missing a field → `ResponseShapeError`.
+- `app/composables/useLeagueFilters.test.ts`: defaults and `.catch()` fallbacks; both filters `replace`, never `push`; source switch clears `sport`.
+- `app/services/queries/useLeagueQueries.test.ts` (MSW): one all-leagues request across remounts; fixture source makes no all-leagues request; seasons once per League across sources; string `seasons` and 429 surface as errors.
+- `app/components/league/LeagueList.test.ts`: with filters applied only matches render; empty state and Clear filters; expanding a card shows the badge.
 - Browser walk of the Examples on the Vercel preview at phone and desktop widths.
 
 ## Verification
