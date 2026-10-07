@@ -1,11 +1,13 @@
-// * Nuxt UI Input theme — upstream defaults from @nuxt/ui 4.11.3, one deviation (defaultVariants.size)
+// * Nuxt UI Input theme — upstream defaults from @nuxt/ui 4.11.3, deviations: base radius, placeholder, xl height, outline variant, defaultVariants.size
 import type { InputConfig } from '../../types/nuxt-ui';
 
 export default {
   slots: {
     root: 'relative inline-flex items-center',
     base: [
-      'w-full rounded-md border-0 appearance-none placeholder:text-dimmed disabled:cursor-not-allowed disabled:opacity-75',
+      // * Changes: 10px radius per the design; placeholder at muted, since dimmed text fails contrast (annexes/design-system.md, Accessibility)
+      // * Default: 'w-full rounded-md border-0 appearance-none placeholder:text-dimmed disabled:cursor-not-allowed disabled:opacity-75'
+      'w-full rounded-[10px] border-0 appearance-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-75',
       'transition-colors'
     ],
     leading: 'absolute inset-y-0 start-0 flex items-center',
@@ -60,7 +62,9 @@ export default {
         trailingIcon: 'size-5'
       },
       xl: {
-        base: 'px-3 py-2 text-base gap-2',
+        // * Changes: 44px touch target (annexes/design-system.md, Sizing)
+        // * Default: 'px-3 py-2 text-base gap-2'
+        base: 'min-h-11 px-3 py-2 text-base gap-2',
         leading: 'ps-3',
         trailing: 'pe-3',
         leadingIcon: 'size-6',
@@ -69,7 +73,10 @@ export default {
       }
     },
     variant: {
-      outline: 'text-highlighted bg-default ring ring-inset ring-accented',
+      // * Changes: inputs sit on the elevated surface, and the outline takes the control border, 3.74:1 where ring-accented is 1.73:1 (annexes/design-system.md, Accessibility)
+      // * Default: 'text-highlighted bg-default ring ring-inset ring-accented'
+      outline:
+        'text-highlighted bg-elevated ring ring-inset ring-(--ui-border-control)',
       soft: 'text-highlighted bg-elevated/50 hover:bg-elevated focus:bg-elevated disabled:bg-elevated/50',
       subtle: 'text-highlighted bg-elevated ring ring-inset ring-accented',
       ghost:

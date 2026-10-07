@@ -28,7 +28,7 @@
     <template v-else>
       <p class="text-sm text-muted">No badge for this League</p>
 
-      <p v-if="imageFailed" class="text-xs text-dimmed">
+      <p v-if="imageFailed" class="text-xs text-muted">
         The image could not load.
       </p>
     </template>

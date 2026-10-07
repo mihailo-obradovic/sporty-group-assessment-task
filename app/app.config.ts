@@ -13,8 +13,11 @@ import toaster from './config/nuxt-ui/toaster';
 
 export default defineAppConfig({
   ui: {
+    // * The mockup's palette on Tailwind's nearest ramps (annexes/design-system.md, Colour)
     colors: {
-      primary: 'green',
+      primary: 'red',
+      success: 'green',
+      warning: 'amber',
       neutral: 'slate'
     },
     alert,

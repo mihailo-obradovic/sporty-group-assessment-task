@@ -1,10 +1,12 @@
-// * Nuxt UI Select theme — upstream defaults from @nuxt/ui 4.11.3, one deviation (defaultVariants.size)
+// * Nuxt UI Select theme — upstream defaults from @nuxt/ui 4.11.3, deviations: base radius, xl height, outline variant, defaultVariants.size
 import type { SelectConfig } from '../../types/nuxt-ui';
 
 export default {
   slots: {
     base: [
-      'relative group rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-75',
+      // * Changes: 10px radius per the design (annexes/design-system.md, Sizing)
+      // * Default: 'relative group rounded-md inline-flex items-center disabled:cursor-not-allowed disabled:opacity-75'
+      'relative group rounded-[10px] inline-flex items-center disabled:cursor-not-allowed disabled:opacity-75',
       'transition-colors'
     ],
     leading: 'absolute inset-y-0 start-0 flex items-center',
@@ -115,7 +117,9 @@ export default {
         empty: 'p-3 text-sm'
       },
       xl: {
-        base: 'px-3 py-2 text-base gap-2',
+        // * Changes: 44px touch target (annexes/design-system.md, Sizing)
+        // * Default: 'px-3 py-2 text-base gap-2'
+        base: 'min-h-11 px-3 py-2 text-base gap-2',
         leading: 'ps-3',
         trailing: 'pe-3',
         leadingIcon: 'size-6',
@@ -132,8 +136,10 @@ export default {
       }
     },
     variant: {
+      // * Changes: the elevated surface, and the control border at 3.74:1 where ring-accented is 1.73:1 (annexes/design-system.md, Accessibility)
+      // * Default: 'text-highlighted bg-default ring ring-inset ring-accented hover:bg-elevated disabled:bg-default'
       outline:
-        'text-highlighted bg-default ring ring-inset ring-accented hover:bg-elevated disabled:bg-default',
+        'text-highlighted bg-elevated ring ring-inset ring-(--ui-border-control) hover:bg-accented/50 disabled:bg-elevated',
       soft: 'text-highlighted bg-elevated/50 hover:bg-elevated focus:bg-elevated disabled:bg-elevated/50',
       subtle:
         'text-highlighted bg-elevated ring ring-inset ring-accented hover:bg-accented/75 disabled:bg-elevated',
