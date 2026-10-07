@@ -10,7 +10,7 @@ Context documents: `context/product-description.md`, `context/glossary.md` (`ref
 
 Convention annexes: none (`references/project-documents.md`)
 
-Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `CONTEXT.md`, `CONTEXT-MAP.md`, or `docs/adr/` (`references/agent-skills.md`)
+Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `CONTEXT.md`, `CONTEXT-MAP.md`, or `docs/adr/` (decision 001, `references/agent-skills.md`)
 
 ## Feature Index
 
@@ -22,9 +22,9 @@ Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `
 
 One line per record: type, status, title, link.
 
-| ### | Type                           | Status | Decision                                              | Document |
-| --- | ------------------------------ | ------ | ----------------------------------------------------- | -------- |
-| 000 | _No documented decisions yet._ | -      | Add the first decision when behavior becomes durable. | -        |
+| ### | Type        | Status   | Decision                                                                                                                      | Document                                                                             |
+| --- | ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 001 | init-design | Accepted | Init design: Nuxt + Nuxt UI SPA, GitHub Actions, Vercel static hosting, fixture for the degraded free API, collapsed ceremony | [decisions/001_init-design_league-list.md](decisions/001_init-design_league-list.md) |
 
 ## Domain Decision Index
 
