@@ -2,3 +2,27 @@ __pycache__/
 .claude/settings.local.json
 .env
 node_modules/
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env.*
+!.env.example
+
+# Vercel CLI link and local build output
+.vercel

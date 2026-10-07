@@ -22,10 +22,10 @@ Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `
 
 One line per record: type, status, title, link.
 
-| ### | Type        | Status   | Decision                                                                                                                      | Document                                                                             |
-| --- | ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| 001 | init-design | Accepted | Init design: Nuxt + Nuxt UI SPA, GitHub Actions, Vercel static hosting, fixture for the degraded free API, collapsed ceremony | [decisions/001_init-design_league-list.md](decisions/001_init-design_league-list.md) |
-| 002 | bootstrap   | Accepted | Bootstrap: Nuxt + Nuxt UI skeleton, Pinia Colada data layer, Vitest + MSW, CI, Vercel static hosting                          | [decisions/002_bootstrap_nuxt-skeleton.md](decisions/002_bootstrap_nuxt-skeleton.md) |
+| ### | Type        | Status      | Decision                                                                                                                      | Document                                                                             |
+| --- | ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 001 | init-design | Implemented | Init design: Nuxt + Nuxt UI SPA, GitHub Actions, Vercel static hosting, fixture for the degraded free API, collapsed ceremony | [decisions/001_init-design_league-list.md](decisions/001_init-design_league-list.md) |
+| 002 | bootstrap   | Implemented | Bootstrap: Nuxt + Nuxt UI skeleton, Pinia Colada data layer, Vitest + MSW, CI, Vercel static hosting                          | [decisions/002_bootstrap_nuxt-skeleton.md](decisions/002_bootstrap_nuxt-skeleton.md) |
 
 ## Domain Decision Index
 
@@ -49,11 +49,12 @@ Pointer index of protections declared in lazy-loaded feature/decision documents.
 
 One row per layer: the module chosen from Catalyst's `stacks/`, plus UI choices, adopted addons, and any optional layer. Filled at spawn; tells an agent which stack documents apply (`architecture.md` has the index).
 
-| Layer       | Module         |
-| ----------- | -------------- |
-| ci          | github-actions |
-| frontend    | nuxt           |
-| frontend/ui | nuxtui         |
+| Layer       | Module                                    |
+| ----------- | ----------------------------------------- |
+| ci          | github-actions                            |
+| frontend    | nuxt                                      |
+| frontend/ui | nuxtui                                    |
+| hosting     | vercel (no Catalyst module; decision 001) |
 
 ## Status Values
 

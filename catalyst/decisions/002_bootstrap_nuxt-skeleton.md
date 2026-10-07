@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Implemented
 
 ## Type
 
@@ -20,7 +20,7 @@ Decision 001 fixed the stack: Nuxt 4 with Nuxt UI as an SPA, GitHub Actions, and
 
 The skeleton is built strictly per `architecture.md` and the Nuxt module, one approved commit per step, on `decision/002-bootstrap-nuxt-skeleton`:
 
-1. **Scaffold.** `pnpm create nuxt` with the Nuxt UI starter, generated in a scratch directory and copied to the repository root so the existing files are untouched. Default `srcDir` (`app/`), which the generated oxfmt paths already assume. `ssr: false`, `nuxt.config.ts` in the module's key order, the TypeScript tier's compiler options, `packageManager` and `engines` pins, `pnpm-workspace.yaml` with the install cooldown, `.nuxtrc` committed. The Lucide icon collection is installed, the one icon set allowed. Any ESLint or Prettier the starter brings is removed.
+1. **Scaffold.** The Nuxt UI starter, generated in a scratch directory and copied to the root, existing files untouched. Default `srcDir` (`app/`), which the generated oxfmt paths already assume. `ssr: false`, `nuxt.config.ts` in the module's key order, the TypeScript tier's compiler options, `packageManager` and `engines` pins, `pnpm-workspace.yaml` with the install cooldown, `.nuxtrc` committed. The Lucide icon collection is installed, the one icon set allowed. Any ESLint or Prettier the starter brings is removed.
 2. **Data layer.** Pinia, `@pinia/colada-nuxt` with a stated `colada.options.ts`, Zod, the fetcher, the central error policy, and the `useAppQuery` wrapper, per `data-layer.md` and `error-handling.md`. The fetcher reads the base URL and the API key (`NUXT_PUBLIC_SPORTSDB_API_KEY`, default `3`) from public runtime config. `error.vue` per the module.
 3. **Tests and toolchain.** Vitest with `@nuxt/test-utils`, Testing Library, Vue Test Utils, and MSW, colocated beside the code; one smoke test proves the suite runs. The six script verbs, with the Vue tier's SFC size check appended to `lint`.
 4. **CI.** One TypeScript job from the module recipe: lint, format check, typecheck, test.
@@ -29,9 +29,11 @@ The skeleton is built strictly per `architecture.md` and the Nuxt module, one ap
 
 Two module defaults change because TheSportsDB is a public, cookie-free API. The fetcher sends **no credentials**: the API answers `Access-Control-Allow-Origin: *`, which browsers reject for credentialed requests. It sends **no CSRF header** and has no CSRF retry, since nothing mutates. The error policy's table is written for this app: there is no 401 or 403 path, so every failure becomes one toast plus the query's own error state.
 
-CI choices the module leaves to this record: `pull_request` beside `push`, so a pull request is gated too; `concurrency` with cancel-in-progress; no path filters, since there is one tier; actions pinned to major tags. There is **no build job**: Vercel builds every push and is the build of record, so a failed Vercel build is the gate.
+CI choices the module leaves to this record: `pull_request` beside `push`; `concurrency` with cancel-in-progress; no path filters, since there is one tier; actions pinned to major tags. There is **no build job**: Vercel builds every push and is the build of record, so a failed Vercel build is the gate.
 
-Regle is not installed: the app has no form to validate, only a search field. It joins under the Dependency Change Rule if a form ever appears.
+As built: the base URL sits in `runtimeConfig` beside the key (`NUXT_PUBLIC_SPORTSDB_BASE_URL`), being the same everywhere. Tests run on jsdom: happy-dom's `Headers` lose every header through Node's `fetch`. MSW's lifecycle lives in the shared server module, since the Nuxt environment loads `setupFiles` in a separate module graph. msw stays on 2.x for Vitest 5's peers. CI reads `mise.toml` in a shell step, as setup-node v7.0.0 predates its `mise.toml` support. Vercel's Corepack switch is a project setting (`operations.md`).
+
+Regle is not installed: there is no form, only a search field.
 
 ## Scope
 
@@ -39,7 +41,7 @@ Repository root configuration, `app/` skeleton files, `.github/workflows/ci.yml`
 
 ## Consequences
 
-The feature branch starts from a green, deployed skeleton, so its first commit is product code. Vercel previews give every branch a shareable URL for browser verification. Pushing to GitHub happens at step 5, since CI and Vercel need the remote; each push is confirmed first.
+The feature branch starts from a green, deployed skeleton, so its first commit is product code. Every branch gets a Vercel preview, behind a Vercel login (`operations.md`). Each push is confirmed first. The shell's skip-to-content link (`vue-style.md`) is left to the league-list feature. Once a setup-node release reads `mise.toml`, CI returns to `node-version-file`.
 
 ## Contracts Touched
 
@@ -51,4 +53,4 @@ The feature branch starts from a green, deployed skeleton, so its first commit i
 
 ## Verification
 
-To be filled when the skeleton lands: dev server starts, the smoke test passes, `nuxt generate` succeeds, CI is green on the branch, and a Vercel preview serves the app at phone and desktop widths.
+At `7906bc5`: CI green (Node 24.21.0, pnpm 12.9.1; lint, format check, typecheck, the fetcher smoke test). Locally the dev server starts and `nuxt generate` succeeds. Vercel built the preview with Corepack's pnpm 12.9.1 and the `vercel-static` preset. Previews need a Vercel login, so that same static build was walked locally at 390 px (touch) and desktop: heading and `<main>` render, no horizontal scroll, no console errors.
