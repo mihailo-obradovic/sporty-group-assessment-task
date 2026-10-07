@@ -27,6 +27,13 @@ A public, 100% runnable repo at `mihailo-obradovic/sporty-group-assessment-task`
 
 TheSportsDB docs: free tier caps all_leagues at 10 results and the seasons lookup at 5; premium raises both. CORS is open (`access-control-allow-origin: *`). The repo is on `master` with remote `origin` on GitHub.
 
+## Progress
+
+- Stage 1 done: Catalyst adopted, mattpocock-skills routed.
+- Stage 2 done: decision 001 (init design) `Accepted`.
+- Stage 3 in progress: decision 002 (bootstrap) `Accepted` on `master`; next is step 1 (scaffold) on a new branch `decision/002-bootstrap-nuxt-skeleton`, following the six steps in the record.
+- Stage 4 not started.
+
 ## Stages
 
 ### Stage 1 — Adopt Catalyst and route the mattpocock pipeline
