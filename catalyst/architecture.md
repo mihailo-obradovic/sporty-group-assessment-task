@@ -36,9 +36,10 @@ Before adding any runtime dependency, framework, package pattern, build plugin, 
 
 The record lives here, in one table: **one row per package the adopted modules' Approved Libraries do not already name.** A rule that says "update `architecture.md`" and names no shape gets a different shape per project, and none of them greppable.
 
-| Package | Layer | Why it is needed | Approved by |
-| ------- | ----- | ---------------- | ----------- |
-|         |       |                  |             |
+| Package       | Layer    | Why it is needed                                                                                                                                                 | Approved by      |
+| ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| `@pinia/nuxt` | Frontend | Pinia's Nuxt module; `@pinia/colada-nuxt` requires it to register Pinia, so it is how the approved Pinia is installed                                            | user, 2026-10-07 |
+| `ofetch`      | Frontend | The fetcher and the error policy import it directly (`ofetch`, `FetchError`); already in the tree through Nuxt at the same version, named by `error-handling.md` | user, 2026-10-07 |
 
 - **`Approved by` cites the gate**, not a person's taste: a decision or feature id, or `user, <date>` where the approval was direct.
 - **A knowingly temporary dependency states its removal trigger inside `Why`** — "until `Temporal` reaches Baseline; the calling code is already written against the native API" — rather than in a column that would be empty for every other row.

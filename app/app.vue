@@ -1,3 +1,11 @@
+<template>
+  <u-app>
+    <u-main>
+      <nuxt-page />
+    </u-main>
+  </u-app>
+</template>
+
 <script setup lang="ts">
 useHead({
   htmlAttrs: {
@@ -8,11 +16,3 @@ useHead({
   title: 'Sporty leagues'
 });
 </script>
-
-<template>
-  <u-app>
-    <u-main>
-      <nuxt-page />
-    </u-main>
-  </u-app>
-</template>
