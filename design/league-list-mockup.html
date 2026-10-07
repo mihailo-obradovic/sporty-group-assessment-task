@@ -1,0 +1,1086 @@
+<title>Sporty Leagues Mockup</title>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+/>
+<style>
+  /* Layout: a mockup board. One sticky filter bar over a card grid; the badge reveal is the only moment that gets color. */
+  :root {
+    --bg: #0e1626; /* stadium navy */
+    --surface: #162136;
+    --surface-2: #1d2b45;
+    --line: #28395a;
+    --fg: #f2f5fa;
+    --muted: #93a1bb;
+    --accent: #ff3d3d; /* signal red */
+    --accent-ink: #ffffff;
+    --ok: #35d07f; /* pitch green: live source only */
+    --warn: #ffb020; /* fixture banner */
+    --board: #080d18; /* the board behind the frames */
+    --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    --display: 'Barlow Condensed', 'Arial Narrow', Impact, sans-serif;
+    --body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme='dark']) {
+      --bg: #f3f5f9;
+      --surface: #ffffff;
+      --surface-2: #e9edf4;
+      --line: #d5dce8;
+      --fg: #10192b;
+      --muted: #5b6b87;
+      --accent: #e62e2e;
+      --accent-ink: #ffffff;
+      --ok: #1e9e5c;
+      --warn: #b86e00;
+      --board: #e3e7ef;
+      --shadow: 0 24px 60px rgba(16, 25, 43, 0.18);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme='light'] {
+    --bg: #f3f5f9;
+    --surface: #ffffff;
+    --surface-2: #e9edf4;
+    --line: #d5dce8;
+    --fg: #10192b;
+    --muted: #5b6b87;
+    --accent: #e62e2e;
+    --accent-ink: #ffffff;
+    --ok: #1e9e5c;
+    --warn: #b86e00;
+    --board: #e3e7ef;
+    --shadow: 0 24px 60px rgba(16, 25, 43, 0.18);
+    color-scheme: light;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--board);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.5;
+    padding-block: 32px 64px;
+    padding-inline: 16px;
+  }
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    text-wrap: balance;
+  }
+  button {
+    font: inherit;
+    color: inherit;
+  }
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  .card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* ---------- board chrome ---------- */
+  .board {
+    max-width: 1240px;
+    margin-inline: auto;
+    display: grid;
+    gap: 56px;
+  }
+  .board-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .board-head h1 {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 800;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+  .board-head p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    max-width: 60ch;
+  }
+  .board-note {
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 48ch;
+  }
+  .frame-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .frame-title h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 26px;
+  }
+  .frame-title span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .frames {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 980px) {
+    .frames {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ---------- the app ---------- */
+  .app {
+    container-type: inline-size;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    min-width: 0;
+  }
+  .app.phone {
+    width: 390px;
+    max-width: 100%;
+    border-radius: 36px;
+    border-width: 6px;
+    border-color: var(--surface-2);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+  .wordmark i {
+    display: inline-block;
+    width: 10px;
+    height: 26px;
+    background: var(--accent);
+    transform: skewX(-18deg);
+    border-radius: 2px;
+  }
+  .source {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .source button {
+    border: 0;
+    background: transparent;
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .source button[aria-pressed='true'] {
+    background: var(--surface-2);
+    color: var(--fg);
+  }
+  .source .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    padding: 10px 20px;
+    background: color-mix(in srgb, var(--warn) 14%, var(--bg));
+    border-bottom: 1px solid color-mix(in srgb, var(--warn) 50%, var(--line));
+    font-size: 14px;
+  }
+  .banner b {
+    font-weight: 600;
+    color: var(--warn);
+  }
+  .banner a {
+    color: var(--fg);
+    font-weight: 500;
+    text-underline-offset: 3px;
+  }
+  .banner[hidden] {
+    display: none;
+  }
+
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px auto;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .field {
+    position: relative;
+    min-width: 0;
+  }
+  .field svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    translate: 0 -50%;
+    width: 16px;
+    height: 16px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--fg);
+    padding: 0 12px 0 36px;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .field select {
+    padding-left: 12px;
+    padding-right: 32px;
+    background-image: none;
+  }
+  .field.select::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  .field input::placeholder {
+    color: var(--muted);
+  }
+  .count {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .count small {
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    padding: 18px 20px 28px;
+  }
+  @container (max-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @container (max-width: 600px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+      padding-inline: 14px;
+    }
+    .filters {
+      grid-template-columns: minmax(0, 1fr);
+      padding-inline: 14px;
+    }
+    .count {
+      justify-self: start;
+    }
+    .topbar,
+    .banner {
+      padding-inline: 16px;
+    }
+  }
+
+  /* ---------- card ---------- */
+  .card {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    padding: 16px 18px 16px 22px;
+    min-height: 108px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background 0.15s;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 6px;
+    background: var(--line);
+    transform: skewX(-10deg);
+    transform-origin: top;
+    transition: background 0.15s;
+  }
+  .card:hover {
+    border-color: color-mix(in srgb, var(--muted) 50%, var(--line));
+  }
+  .card[aria-expanded='true'] {
+    background: var(--surface-2);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  }
+  .card[aria-expanded='true']::before,
+  .card:hover::before {
+    background: var(--accent);
+  }
+  .card-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .card h3 {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -0.005em;
+  }
+  .sport {
+    flex: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 3px 9px;
+    transform: skewX(-12deg);
+    border-radius: 3px;
+    margin-top: 2px;
+  }
+  .sport span {
+    display: inline-block;
+    transform: skewX(12deg);
+  }
+  .alt {
+    color: var(--muted);
+    font-size: 14px;
+    min-height: 1.4em;
+  }
+  .alt:empty::before {
+    content: '';
+  }
+  .chev {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+  }
+  .card[aria-expanded='true'] .chev {
+    transform: rotate(225deg);
+  }
+
+  /* ---------- badge panel ---------- */
+  .panel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    min-height: 112px;
+  }
+  .plate {
+    flex: none;
+    width: 88px;
+    height: 88px;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+  }
+  .plate svg {
+    width: 64px;
+    height: 64px;
+  }
+  .plate.loading {
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .plate.loading svg {
+    opacity: 0.35;
+  }
+  .plate.none {
+    border-style: dashed;
+  }
+  .plate.none svg {
+    opacity: 0.3;
+  }
+  .panel-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .panel-text .season {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .panel-text .meta {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .panel.error {
+    border-top-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  }
+  .panel.error .plate {
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  }
+  .panel.error .season {
+    font-size: 20px;
+  }
+  .retry {
+    margin-top: 6px;
+    justify-self: start;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 0;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  @keyframes pulse {
+    50% {
+      opacity: 0.55;
+    }
+  }
+
+  /* ---------- skeleton, empty ---------- */
+  .skel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px 16px 22px;
+    min-height: 108px;
+    display: grid;
+    gap: 12px;
+  }
+  .skel i {
+    display: block;
+    height: 14px;
+    border-radius: 6px;
+    background: var(--surface-2);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .skel i:first-child {
+    height: 24px;
+    width: 70%;
+  }
+  .skel i:last-child {
+    width: 45%;
+  }
+  .empty {
+    grid-column: 1 / -1;
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 56px 20px;
+    text-align: center;
+  }
+  .empty h3 {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 32px;
+  }
+  .empty p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 40ch;
+  }
+  .empty .retry {
+    margin-top: 10px;
+  }
+
+  /* ---------- toast ---------- */
+  .toast {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    translate: -50% 0;
+    background: var(--fg);
+    color: var(--bg);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+  }
+  .toast b {
+    color: var(--accent);
+  }
+
+  /* ---------- states gallery ---------- */
+  .states {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .state {
+    display: grid;
+    gap: 10px;
+  }
+  .state > span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .state .app {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .state .grid {
+    padding: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* ---------- tokens ---------- */
+  .tokens {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .tokens h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .swatches {
+    display: grid;
+    gap: 6px;
+  }
+  .sw {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .sw i {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    flex: none;
+  }
+  .sw code {
+    color: var(--muted);
+    margin-left: auto;
+    font-size: 12px;
+  }
+  .type-spec {
+    display: grid;
+    gap: 10px;
+  }
+  .type-spec .ex {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+  }
+  .type-spec p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .rules {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 14px;
+    display: grid;
+    gap: 6px;
+  }
+  .rules b {
+    color: var(--fg);
+    font-weight: 600;
+  }
+</style>
+
+<div class="board">
+  <header class="board-head">
+    <div>
+      <h1>Sporty Leagues</h1>
+      <p>
+        Design mockup for feature 001, the league list. Sample data from the
+        fixture; every state below is one the contract names. The frames are
+        live: type, pick a sport, and click a card.
+      </p>
+    </div>
+    <p class="board-note">
+      Light and dark follow your system theme. The badge shield is a stand-in
+      for the TheSportsDB image.
+    </p>
+  </header>
+
+  <section>
+    <div class="frame-title">
+      <h2>Desktop</h2>
+      <span>1024 and up · three columns · fixture source</span>
+    </div>
+    <div class="frames">
+      <div class="app" id="desktop"></div>
+      <div>
+        <div class="frame-title">
+          <h2>Phone</h2>
+          <span>390 wide · one column</span>
+        </div>
+        <div class="app phone" id="phone"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="frame-title">
+      <h2>States</h2>
+      <span>as the feature document lists them</span>
+    </div>
+    <div class="states" id="states"></div>
+  </section>
+
+  <section>
+    <div class="frame-title">
+      <h2>Tokens</h2>
+      <span>what implementation maps onto the Nuxt UI theme</span>
+    </div>
+    <div class="tokens">
+      <div>
+        <h3>Color</h3>
+        <div class="swatches">
+          <div class="sw">
+            <i style="background: var(--bg)"></i>Background, stadium navy<code
+              >--bg</code
+            >
+          </div>
+          <div class="sw">
+            <i style="background: var(--surface)"></i>Card surface<code
+              >--surface</code
+            >
+          </div>
+          <div class="sw">
+            <i style="background: var(--surface-2)"></i>Expanded surface,
+            inputs<code>--surface-2</code>
+          </div>
+          <div class="sw">
+            <i style="background: var(--accent)"></i>Signal red, the one
+            accent<code>--accent</code>
+          </div>
+          <div class="sw">
+            <i style="background: var(--ok)"></i>Pitch green, live source
+            only<code>--ok</code>
+          </div>
+          <div class="sw">
+            <i style="background: var(--warn)"></i>Amber, fixture banner
+            only<code>--warn</code>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Type</h3>
+        <div class="type-spec">
+          <div class="ex">Barlow Condensed</div>
+          <p>
+            Display, italic 700 and 800: league names, counts, season labels,
+            the wordmark. Body is Barlow 400 to 600. One family, two widths, so
+            the page stays one voice.
+          </p>
+          <p>
+            Scale: wordmark 26, league name 28, season 24, body 15, meta 13.
+            Numbers are tabular.
+          </p>
+        </div>
+      </div>
+      <div>
+        <h3>Rules</h3>
+        <ul class="rules">
+          <li>
+            <b>Red appears on action only.</b> The card blade on hover and
+            expand, Retry, focus rings. Never as decoration.
+          </li>
+          <li>
+            <b>The slant is the brand move.</b> Wordmark bar, card blade, sport
+            tag. Nothing else skews.
+          </li>
+          <li>
+            <b>Status has its own hue.</b> Green for live, amber for sample
+            data; neither competes with the accent.
+          </li>
+          <li>
+            <b>Touch targets are 44px.</b> Inputs, Retry, cards. The filter bar
+            sticks on scroll.
+          </li>
+          <li>
+            <b>Alternate name stays as a line even when blank,</b> so cards in a
+            row share a height.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    // Sample rows transcribed from the fixture's leagues; alternate names as TheSportsDB returns them.
+    const LEAGUES = [
+      {
+        id: 4328,
+        name: 'English Premier League',
+        sport: 'Soccer',
+        alt: 'Premier League, EPL'
+      },
+      {
+        id: 4329,
+        name: 'English League Championship',
+        sport: 'Soccer',
+        alt: 'Championship, EFL Championship'
+      },
+      {
+        id: 4331,
+        name: 'German Bundesliga',
+        sport: 'Soccer',
+        alt: 'Bundesliga'
+      },
+      { id: 4332, name: 'Italian Serie A', sport: 'Soccer', alt: 'Serie A' },
+      { id: 4334, name: 'French Ligue 1', sport: 'Soccer', alt: 'Ligue 1' },
+      { id: 4335, name: 'Spanish La Liga', sport: 'Soccer', alt: 'La Liga' },
+      {
+        id: 4337,
+        name: 'Dutch Eredivisie',
+        sport: 'Soccer',
+        alt: 'Eredivisie'
+      },
+      {
+        id: 4346,
+        name: 'American Major League Soccer',
+        sport: 'Soccer',
+        alt: 'MLS'
+      },
+      {
+        id: 4387,
+        name: 'NBA',
+        sport: 'Basketball',
+        alt: 'National Basketball Association'
+      },
+      { id: 4388, name: 'Australian NBL', sport: 'Basketball', alt: 'NBL' },
+      {
+        id: 4380,
+        name: 'NHL',
+        sport: 'Ice Hockey',
+        alt: 'National Hockey League'
+      },
+      { id: 4419, name: 'Russian KHL', sport: 'Ice Hockey', alt: '' },
+      {
+        id: 4414,
+        name: 'English Premiership Rugby',
+        sport: 'Rugby',
+        alt: 'Gallagher Premiership'
+      },
+      { id: 4446, name: 'Super Rugby', sport: 'Rugby', alt: '' },
+      { id: 4370, name: 'Formula 1', sport: 'Motorsport', alt: 'F1' },
+      { id: 4373, name: 'MotoGP', sport: 'Motorsport', alt: '' }
+    ];
+    const SEASONS = {
+      4328: '2024-2025',
+      4387: '2024-2025',
+      4370: '2025',
+      4380: '2024-2025',
+      4335: '2024-2025'
+    };
+
+    const shield = (stroke) =>
+      `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 L54 12 V32 C54 46 44 56 32 60 C20 56 10 46 10 32 V12 Z" fill="var(--surface-2)" stroke="${stroke}" stroke-width="2"/><path d="M32 12 L46 17 V31 C46 41 40 48 32 51 C24 48 18 41 18 31 V17 Z" fill="var(--accent)" opacity=".9"/><text x="32" y="36" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="800" font-style="italic" font-size="14" fill="var(--accent-ink)">SB</text></svg>`;
+    const searchIcon =
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3.5 3.5"/></svg>';
+
+    function panelHtml(state, league) {
+      if (state === 'loading')
+        return `<div class="panel"><div class="plate loading">${shield('var(--line)')}</div><div class="panel-text"><div class="season">Looking up seasons</div><div class="meta">One request per league, then cached</div></div></div>`;
+      if (state === 'none')
+        return `<div class="panel"><div class="plate none">${shield('var(--muted)')}</div><div class="panel-text"><div class="season">No badge for this league</div><div class="meta">TheSportsDB has no season image</div></div></div>`;
+      if (state === 'imgfail')
+        return `<div class="panel"><div class="plate none">${shield('var(--muted)')}</div><div class="panel-text"><div class="season">No badge</div><div class="meta">The image could not load</div></div></div>`;
+      if (state === 'error')
+        return `<div class="panel error"><div class="plate">${shield('var(--accent)')}</div><div class="panel-text"><div class="season">Couldn’t load seasons</div><div class="meta">The request failed or was rate limited</div><button class="retry" type="button">Retry</button></div></div>`;
+      const season = SEASONS[league.id] || '2024-2025';
+      return `<div class="panel"><div class="plate">${shield('var(--accent)')}</div><div class="panel-text"><div class="season">Season ${season}</div><div class="meta">Most recent season with a badge</div></div></div>`;
+    }
+
+    function cardHtml(l, state) {
+      const expanded = !!state;
+      return `<article class="card" role="button" tabindex="0" aria-expanded="${expanded}" data-id="${l.id}">
+      <div class="card-head"><h3>${l.name}</h3><span class="sport"><span>${l.sport}</span></span></div>
+      <div class="alt">${l.alt}</div>
+      ${expanded ? panelHtml(state, l) : ''}
+      <span class="chev"></span>
+    </article>`;
+    }
+
+    function skeletonHtml() {
+      return '<div class="skel"><i></i><i></i><i></i></div>';
+    }
+
+    function emptyHtml() {
+      return `<div class="empty"><h3>No leagues match</h3><p>Nothing here for that name and sport. Clear the filters to see every league.</p><button class="retry" type="button" data-clear>Clear filters</button></div>`;
+    }
+
+    function mountApp(root, opts) {
+      const open = Object.assign({}, opts.open || {});
+      let q = opts.q || '',
+        sport = opts.sport || '',
+        source = opts.source || 'fixture';
+      root.innerHTML = `
+      <div class="topbar"><div class="wordmark"><i></i>Leagues</div>
+        <div class="source" role="group" aria-label="Data source">
+          <button type="button" data-src="live" aria-pressed="${source === 'live'}"><span class="dot"></span>Live</button>
+          <button type="button" data-src="fixture" aria-pressed="${source === 'fixture'}">Sample</button>
+        </div></div>
+      <div class="banner" ${source === 'fixture' ? '' : 'hidden'}><b>Sample data.</b> The free API lists only Soccer, so this list is a fixture of 19 real leagues. <a href="#live">Show the live list</a></div>
+      <div class="filters">
+        <label class="field">${searchIcon}<input type="search" placeholder="Search leagues by name" aria-label="Search leagues by name" value="${q}"></label>
+        <label class="field select"><select aria-label="Sport"><option value="">All sports</option></select></label>
+        <div class="count"><span data-count></span><small>leagues</small></div>
+      </div>
+      <div class="grid"></div>`;
+      const input = root.querySelector('input'),
+        select = root.querySelector('select'),
+        grid = root.querySelector('.grid'),
+        count = root.querySelector('[data-count]');
+      const rows = () =>
+        source === 'live'
+          ? LEAGUES.filter((l) => l.sport === 'Soccer').map((l) => ({
+              ...l,
+              alt: ''
+            }))
+          : LEAGUES;
+      function render() {
+        const sports = [...new Set(rows().map((l) => l.sport))].sort();
+        select.innerHTML =
+          '<option value="">All sports</option>' +
+          sports
+            .map(
+              (s) => `<option ${s === sport ? 'selected' : ''}>${s}</option>`
+            )
+            .join('');
+        if (sport && !sports.includes(sport))
+          select.insertAdjacentHTML(
+            'beforeend',
+            `<option selected>${sport}</option>`
+          );
+        const needle = q.trim().toLowerCase();
+        const list = rows()
+          .filter(
+            (l) =>
+              (!needle || l.name.toLowerCase().includes(needle)) &&
+              (!sport || l.sport === sport)
+          )
+          .sort((a, b) => a.name.localeCompare(b.name));
+        count.textContent = list.length;
+        grid.innerHTML = list.length
+          ? list.map((l) => cardHtml(l, open[l.id])).join('')
+          : emptyHtml();
+      }
+      input.addEventListener('input', () => {
+        q = input.value;
+        render();
+      });
+      select.addEventListener('change', () => {
+        sport = select.value;
+        render();
+      });
+      root.addEventListener('click', (e) => {
+        const src = e.target.closest('[data-src]');
+        if (src) {
+          source = src.dataset.src;
+          sport = '';
+          mountApp(root, { q, source, open });
+          return;
+        }
+        if (e.target.closest('a[href="#live"]')) {
+          e.preventDefault();
+          source = 'live';
+          sport = '';
+          mountApp(root, { q, source, open });
+          return;
+        }
+        if (e.target.closest('[data-clear]')) {
+          q = '';
+          sport = '';
+          input.value = '';
+          render();
+          return;
+        }
+        if (e.target.closest('.retry')) {
+          const card = e.target.closest('.card');
+          if (card) {
+            open[card.dataset.id] = 'loading';
+            render();
+            setTimeout(() => {
+              open[card.dataset.id] = 'badge';
+              render();
+            }, 900);
+          }
+          return;
+        }
+        const card = e.target.closest('.card');
+        if (!card) return;
+        const id = card.dataset.id;
+        if (open[id]) {
+          delete open[id];
+          render();
+          return;
+        }
+        open[id] = 'loading';
+        render();
+        setTimeout(() => {
+          if (open[id] === 'loading') {
+            open[id] = id === '4329' ? 'none' : 'badge';
+            render();
+          }
+        }, 700);
+      });
+      root.addEventListener('keydown', (e) => {
+        if (
+          (e.key === 'Enter' || e.key === ' ') &&
+          e.target.classList.contains('card')
+        ) {
+          e.preventDefault();
+          e.target.click();
+        }
+      });
+      render();
+    }
+
+    mountApp(document.getElementById('desktop'), { open: { 4328: 'badge' } });
+    mountApp(document.getElementById('phone'), {
+      sport: 'Basketball',
+      open: { 4387: 'badge' }
+    });
+
+    const epl = LEAGUES[0],
+      chp = LEAGUES[1],
+      nhl = LEAGUES[10],
+      f1 = LEAGUES[14];
+    const states = [
+      [
+        'Loading the list',
+        `<div class="grid">${skeletonHtml()}${skeletonHtml()}</div>`
+      ],
+      [
+        'Card at rest and expanded with a badge',
+        `<div class="grid">${cardHtml(nhl)}${cardHtml(epl, 'badge')}</div>`
+      ],
+      [
+        'Looking up seasons',
+        `<div class="grid">${cardHtml(f1, 'loading')}</div>`
+      ],
+      [
+        'No season has a badge',
+        `<div class="grid">${cardHtml(chp, 'none')}</div>`
+      ],
+      [
+        'Badge image failed to load',
+        `<div class="grid">${cardHtml(epl, 'imgfail')}</div>`
+      ],
+      [
+        'Seasons request failed, with toast',
+        `<div class="grid">${cardHtml(f1, 'error')}</div><div class="toast" style="position:static;translate:none;margin-top:14px;justify-self:center;width:max-content"><b>●</b> Couldn’t load seasons for Formula 1</div>`
+      ],
+      ['No match', `<div class="grid">${emptyHtml()}</div>`],
+      [
+        'No leagues available',
+        `<div class="grid"><div class="empty"><h3>No leagues available</h3><p>The list came back empty. Try again in a moment.</p><button class="retry" type="button">Retry</button></div></div>`
+      ]
+    ];
+    document.getElementById('states').innerHTML = states
+      .map(
+        ([t, h]) =>
+          `<div class="state"><span>${t}</span><div class="app">${h}</div></div>`
+      )
+      .join('');
+  })();
+</script>

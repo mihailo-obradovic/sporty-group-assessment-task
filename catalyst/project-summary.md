@@ -8,15 +8,15 @@ This project is a home assignment for a Frontend Engineer role at Sporty Group: 
 
 Context documents: `context/product-description.md`, `context/glossary.md` (`references/project-documents.md`)
 
-Convention annexes: none (`references/project-documents.md`)
+Convention annexes: `annexes/design-system.md` — when writing or changing anything visual in `app/` (`references/project-documents.md`)
 
 Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `CONTEXT.md`, `CONTEXT-MAP.md`, or `docs/adr/` (decision 001, `references/agent-skills.md`)
 
 ## Feature Index
 
-| ### | Feature     | Status   | Summary                                                                                                                                                                                    | Document                                                   |
-| --- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| 001 | League list | Approved | The one screen: TheSportsDB Leagues with name search and Sport filter held in the URL, click-to-reveal Season badge, session cache, and a flagged fixture mode for the degraded free tier. | [features/001_league-list.md](features/001_league-list.md) |
+| ### | Feature     | Status | Summary                                                                                                                                                                                                                                             | Document                                                   |
+| --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| 001 | League list | Active | The one screen: TheSportsDB Leagues with name search and Sport filter held in the URL, click-to-reveal Season badge, session cache, and a flagged fixture mode (Live / Sample toggle) for the degraded free tier, in the mockup's dark-only design. | [features/001_league-list.md](features/001_league-list.md) |
 
 ## Architecture Decision Record (ADR) Index
 

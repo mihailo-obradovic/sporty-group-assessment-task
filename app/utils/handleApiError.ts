@@ -3,6 +3,8 @@ import { FetchError } from 'ofetch';
 import type { ErrorContext, ErrorHandling } from '@/types/api';
 
 const GENERIC_MESSAGE = 'Something went wrong. Please try again.';
+const RATE_LIMITED_MESSAGE =
+  'TheSportsDB is rate limiting requests. Try again in a minute.';
 
 const handledErrors = new WeakSet<object>();
 
@@ -35,12 +37,18 @@ function isAbort(error: object): boolean {
 }
 
 function readMessage(error: object): string {
+  // ! Never a FetchError's own message: ofetch builds it from the method, the full request URL (API key included), and the status
   if (error instanceof FetchError) {
     const apiMessage: unknown = error.data?.message;
 
     if (typeof apiMessage === 'string' && apiMessage !== '') {
       return apiMessage;
     }
+    if (error.statusCode === 429) {
+      return RATE_LIMITED_MESSAGE;
+    }
+
+    return GENERIC_MESSAGE;
   }
   if (error instanceof Error && error.message !== '') {
     return error.message;
