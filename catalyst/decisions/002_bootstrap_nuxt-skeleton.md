@@ -31,7 +31,7 @@ Two module defaults change because TheSportsDB is a public, cookie-free API. The
 
 CI choices the module leaves to this record: `pull_request` beside `push`, so a pull request is gated too; `concurrency` with cancel-in-progress; no path filters, since there is one tier; actions pinned to major tags. There is **no build job**: Vercel builds every push and is the build of record, so a failed Vercel build is the gate.
 
-As built: the base URL sits in `runtimeConfig` beside the key (`NUXT_PUBLIC_SPORTSDB_BASE_URL`), being the same everywhere. Tests run on jsdom: happy-dom's `Headers` lose every header through Node's `fetch`. MSW's lifecycle lives in the shared server module, since the Nuxt environment loads `setupFiles` in a separate module graph. msw stays on 2.x for Vitest 5's peers. CI reads `mise.toml` in a shell step, as setup-node v7.0.0 predates its `mise.toml` support. Vercel's Corepack and Node 24.x are project settings (`operations.md`).
+As built: the base URL sits in `runtimeConfig` beside the key (`NUXT_PUBLIC_SPORTSDB_BASE_URL`), being the same everywhere. Tests run on jsdom: happy-dom's `Headers` lose every header through Node's `fetch`. MSW's lifecycle lives in the shared server module, since the Nuxt environment loads `setupFiles` in a separate module graph. msw stays on 2.x for Vitest 5's peers. CI reads `mise.toml` in a shell step, as setup-node v7.0.0 predates its `mise.toml` support. Vercel's Corepack switch is a project setting (`operations.md`).
 
 Regle is not installed: the app has no form to validate, only a search field. It joins under the Dependency Change Rule if a form ever appears.
 

@@ -6,7 +6,7 @@ How to run what is already built. Rules and contracts live in `architecture.md` 
 
 ## Vercel (static hosting)
 
-Every push to GitHub builds through the Git integration: `master` deploys to production, every other branch to a preview. The build command is `pnpm generate`, set in `vercel.json`. On Vercel's builders Nitro selects its `vercel-static` preset and writes the Build Output API directory itself, so the project has no output-directory setting. Project settings outside the repository: framework preset `nuxtjs`, Node `24.x`, and `ENABLE_EXPERIMENTAL_COREPACK=1` (Production and Preview).
+Every push to GitHub builds through the Git integration: `master` deploys to production, every other branch to a preview. The build command is `pnpm generate`, set in `vercel.json`. On Vercel's builders Nitro selects its `vercel-static` preset and writes the Build Output API directory itself, so the project has no output-directory setting. Project settings outside the repository: framework preset `nuxtjs`, Node `24.x`, and `ENABLE_EXPERIMENTAL_COREPACK=1` (Production and Preview). The Node setting is inert; see Quirks.
 
 ### Operate
 
@@ -33,6 +33,7 @@ The team is on the Hobby plan, where a rollback reaches only the previous produc
 
 - **The project's first deployment went to production from a branch.** With `productionBranch` already `master`, the first push of `decision/002-bootstrap-nuxt-skeleton` was assigned the production domains, apparently because no production deployment existed yet. Later branch pushes are previews.
 - **pnpm comes from Corepack, not from the lockfile.** Without `ENABLE_EXPERIMENTAL_COREPACK=1` Vercel picks pnpm by `lockfileVersion` and ignores the `packageManager` pin.
-- **Node is set on the project, not read from the repository.** `engines` says `>=24`, which Vercel resolves to its newest Node, so the project setting holds `24.x` to match `mise.toml`. Moving the `mise.toml` pin means changing this setting too.
+- **Vercel's Node comes from `engines`, not from the project setting.** `engines.node` overrides the project's Node version, and `>=24` resolves to the newest major Vercel offers: 24 today, the next major as soon as Vercel adds it, while dev and CI stay on the `mise.toml` pin. Every build log warns about this. The project setting also says `24.x`, but it has no effect while `engines` is present.
 - **`vercel link` writes outside `.vercel/`.** It creates `.env.local` holding a `VERCEL_OIDC_TOKEN` and appends `.env*` to `.gitignore`, which also ignores `.env.example`. Delete the file and drop that line after linking.
 - **The project was created with the Vercel CLI.** The Vercel MCP server's create call was refused with a 403 for this team.
+- **Preview URLs need a Vercel login; production does not.** The team's default Vercel Authentication (`ssoProtection: all_except_custom_domains`) sends anonymous visitors of a preview to a Vercel sign-in. `sporty-group-assessment-task.vercel.app` answers anonymously. A reviewer link is the production URL. Browser checks of a preview run in a browser signed in to the team.
