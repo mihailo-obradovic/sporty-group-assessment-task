@@ -42,7 +42,7 @@ The brief expects about 90 minutes of work; anything unfinished is explained in 
 
 ## Key Integrations
 
-- `TheSportsDB v1 API` (https://www.thesportsdb.com/free_sports_api): the only data source. The brief names two endpoints — all leagues (`/api/v1/json/3/all_leagues.php`) and the season badge lookup (`/api/v1/json/3/search_all_seasons.php?badge=1&id=<id>`). The free tier behind key `3` is limited: as checked on 2026-10-07 it returns only five Soccer leagues, without the alternate-name field, and caps the badge lookup at five seasons.
+- `TheSportsDB v1 API` (https://www.thesportsdb.com/free_sports_api): the only data source. The brief names two endpoints — all leagues (`/api/v1/json/3/all_leagues.php`) and the season badge lookup (`/api/v1/json/3/search_all_seasons.php?badge=1&id=<id>`). The free tier behind key `3` is limited: as checked on 2026-10-07 it returns only ten Soccer leagues, without the alternate-name field, and caps the badge lookup at five seasons, oldest first. The single-league lookup (`lookupleague.php`) and the badge lookup do answer for leagues of every sport.
 
 ## Success Signals
 

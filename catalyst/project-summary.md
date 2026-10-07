@@ -14,9 +14,9 @@ Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `
 
 ## Feature Index
 
-| ### | Feature                       | Status | Summary                                              | Document |
-| --- | ----------------------------- | ------ | ---------------------------------------------------- | -------- |
-| 000 | _No documented features yet._ | -      | Add the first feature when behavior becomes durable. | -        |
+| ### | Feature     | Status   | Summary                                                                                                                                                                                    | Document                                                   |
+| --- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| 001 | League list | Approved | The one screen: TheSportsDB Leagues with name search and Sport filter held in the URL, click-to-reveal Season badge, session cache, and a flagged fixture mode for the degraded free tier. | [features/001_league-list.md](features/001_league-list.md) |
 
 ## Architecture Decision Record (ADR) Index
 
