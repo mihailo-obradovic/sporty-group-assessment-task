@@ -51,6 +51,10 @@ The record lives here, in one table: **one row per package the adopted modules' 
 
 This file holds technical structure and dependency choices; everything else routes per the file index (`AGENTS.md`) and Context Loading (`prime-directive.md`). One ownership rule lives here: a project's cross-cutting convention annexes are owned and indexed by this file (`references/project-documents.md`) — distinct from `conventions/`, Catalyst's own always-applied set that arrives with the bundle and upgrades with it.
 
+| Annex                                                  | Covers                                                                                              | Adopted                        |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------ |
+| [`annexes/design-system.md`](annexes/design-system.md) | Colour aliases (dark only), fonts and type scale, the slant, sizing, breakpoints, measured contrast | user, 2026-10-07 (feature 001) |
+
 ## Universal Rules
 
 Stack-neutral. Every project, every stack module.

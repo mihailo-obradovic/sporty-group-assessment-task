@@ -31,12 +31,14 @@ The app's one screen: browse TheSportsDB Leagues, narrow them by name and Sport,
 | Filter controls      | UI   | search input + Sport select, mirrored into the URL query                                   |
 | Season badge panel   | UI   | inside an expanded card: loading, badge with its season label, "no badge", or error        |
 | Fixture banner       | UI   | persistent while `source=fixture`; says the list is sample data and links to `source=live` |
+| Source toggle        | UI   | Live / Sample switch in the top bar beside the wordmark; shows and sets `source`           |
+| Result count         | UI   | the number of Leagues the filters leave, in the filter bar                                 |
 
 ## Scope And Non-Goals
 
-In scope: everything below, the `KNOWN_FAKES.md` row, and the README "AI tools" and "Design decisions" sections.
+In scope: everything below, the `KNOWN_FAKES.md` row, the README "AI tools" and "Design decisions" sections, and the visual design of `design/league-list-mockup.html`, dark only, with its tokens and rules in `annexes/design-system.md`.
 
-Non-goals: matching the Alternate name in search (the brief says name; the live tier omits the field); pagination (10 live Leagues, 19 fixture); a League's own logo or detail page; a cache surviving a reload; a designed visual identity (later record); sorting controls.
+Non-goals: matching the Alternate name in search (the brief says name; the live tier omits the field); pagination (10 live Leagues, 19 fixture); a League's own logo or detail page; a cache surviving a reload; sorting controls; a light theme or a theme toggle; the mockup's Retry on an empty list and its blank Alternate name line.
 
 ## User / System Behavior
 
@@ -45,7 +47,8 @@ Non-goals: matching the Alternate name in search (the brief says name; the live 
 - Typing updates `q`, debounced ~250 ms; choosing a Sport updates `sport` at once. Both replace the history entry, never push one, so Back leaves the page rather than stepping through filters. Reload, bookmark, and shared link restore both.
 - No match → an empty state with "Clear filters", which removes `q` and `sport`.
 - Clicking a card expands it and looks up that League's seasons. The badge shown is the **most recent** season with a non-null `strBadge` (the API lists oldest first), labelled with its `strSeason`. A second click collapses. Several cards may be open. Re-expanding shows the cached result without a request.
-- `source=fixture` replaces only the all-leagues list with the fixture and shows the banner; badges still come from the live seasons lookup. The banner link sets `source=live` explicitly, so it works where the env default is `fixture`. Switching source keeps `q` and resets `sport`.
+- `source=fixture` replaces only the all-leagues list with the fixture and shows the banner; badges still come from the live seasons lookup. The banner link and the top bar's Live / Sample toggle set `source` explicitly, so they work whatever the env default is; the toggle marks the active source (`aria-pressed`). Switching source keeps `q` and resets `sport`.
+- The filter bar shows how many Leagues the filters leave and stays in view while the list scrolls.
 - Phone width: single-column cards, stacked filters; a grid from tablet up. No horizontal scroll; touch-sized targets.
 
 ## Roles And Access
@@ -54,20 +57,21 @@ Not role-specific.
 
 ## Examples
 
-| Input                                     | Expected Output                                              | Notes                  |
-| ----------------------------------------- | ------------------------------------------------------------ | ---------------------- |
-| `/` (live free tier)                      | 10 Soccer Leagues; Alternate name blank; Sports: All, Soccer | degraded tier          |
-| `/?source=fixture`                        | 19 Leagues across 5 Sports; banner visible                   | fixture mode           |
-| `/?source=fixture&q=LEAGUE`               | Leagues whose name contains "league", any case               | any case               |
-| `/?source=fixture&sport=Basketball&q=nba` | Basketball Leagues whose name contains "nba"                 | AND                    |
-| `/?sport=Basketball` (live)               | empty state with Clear filters; select shows Basketball      | unknown Sport kept     |
-| `/?source=bogus`                          | env-default source                                           | `.catch()` default     |
-| expand 4328 (English Premier League)      | spinner, then the latest badged season's image + label       |                        |
-| expand 4329 (no season has a badge)       | "No badge for this League"                                   | real live case         |
-| expand, collapse, expand                  | badge shown, no second request                               | cached per League      |
-| expand in fixture, switch to live, expand | no second request                                            | key is `idLeague`      |
-| badge image fails to load                 | "No badge" with "image could not load"                       | no retry, no toast     |
-| seasons request fails or 429              | in-card error with Retry; toast                              | other cards unaffected |
+| Input                                     | Expected Output                                                      | Notes                            |
+| ----------------------------------------- | -------------------------------------------------------------------- | -------------------------------- |
+| `/` (live free tier)                      | 10 Soccer Leagues; Alternate name blank; Sports: All, Soccer         | degraded tier                    |
+| `/?source=fixture`                        | 19 Leagues across 5 Sports; banner visible; count 19; Sample pressed | fixture mode                     |
+| `/?source=fixture&q=LEAGUE`               | Leagues whose name contains "league", any case                       | any case                         |
+| `/?source=fixture&sport=Basketball&q=nba` | Basketball Leagues whose name contains "nba"; count 2                | AND                              |
+| `/?q=league&sport=Soccer`, press Sample   | `?q=league&source=fixture`; banner visible; Sample pressed           | toggle keeps `q`, resets `sport` |
+| `/?sport=Basketball` (live)               | empty state with Clear filters; select shows Basketball              | unknown Sport kept               |
+| `/?source=bogus`                          | env-default source                                                   | `.catch()` default               |
+| expand 4328 (English Premier League)      | spinner, then the latest badged season's image + label               |                                  |
+| expand 4329 (no season has a badge)       | "No badge for this League"                                           | real live case                   |
+| expand, collapse, expand                  | badge shown, no second request                                       | cached per League                |
+| expand in fixture, switch to live, expand | no second request                                                    | key is `idLeague`                |
+| badge image fails to load                 | "No badge" with "image could not load"                               | no retry, no toast               |
+| seasons request fails or 429              | in-card error with Retry; toast                                      | other cards unaffected           |
 
 ## Business Rules
 
@@ -121,7 +125,7 @@ Not role-specific.
 - `app/services/leagues.api.test.ts` (MSW): blank Alternate name (missing, `null`, `""`); `leagues: null` and `seasons: null` → none; string `seasons` and a League missing a field → `ResponseShapeError`.
 - `app/composables/useLeagueFilters.test.ts`: defaults and `.catch()` fallbacks; both filters `replace`, never `push`; source switch clears `sport`.
 - `app/services/queries/useLeagueQueries.test.ts` (MSW): one all-leagues request across remounts; fixture source makes no all-leagues request; seasons once per League across sources; string `seasons` and 429 surface as errors.
-- `app/components/league/LeagueList.test.ts` (the page, MSW): with filters applied only matches render; unknown Sport kept; both empty states and Clear filters; debounced search reaches the URL; error and Retry; expanding a card shows the badge.
+- `app/components/league/LeagueList.test.ts` (the page, MSW): with filters applied only matches render, and the count follows; unknown Sport kept; both empty states and Clear filters; debounced search reaches the URL; error and Retry; badge panel states; banner; the source toggle.
 - Browser walk of the Examples on the Vercel preview at phone and desktop widths.
 
 ## Verification

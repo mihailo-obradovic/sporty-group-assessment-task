@@ -8,7 +8,7 @@ This project is a home assignment for a Frontend Engineer role at Sporty Group: 
 
 Context documents: `context/product-description.md`, `context/glossary.md` (`references/project-documents.md`)
 
-Convention annexes: none (`references/project-documents.md`)
+Convention annexes: `annexes/design-system.md` — when writing or changing anything visual in `app/` (`references/project-documents.md`)
 
 Agent adapters: `agents/domain.md` — when a mattpocock-skills skill asks for `CONTEXT.md`, `CONTEXT-MAP.md`, or `docs/adr/` (decision 001, `references/agent-skills.md`)
 
