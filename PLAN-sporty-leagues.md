@@ -20,10 +20,10 @@ A public, 100% runnable repo at `mihailo-obradovic/sporty-group-assessment-task`
 
 ## Facts (verified 2026-10-07)
 
-| Endpoint                                 | Assignment expects                                 | Live free tier (keys `3` and `123`)                                          |
-| ---------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `all_leagues.php`                        | many leagues, several sports, `strLeagueAlternate` | 5 leagues, all Soccer; fields `idLeague`, `strLeague`, `strSport` only       |
-| `search_all_seasons.php?badge=1&id=<id>` | seasons with badges                                | works: `[{strSeason, strBadge}]` (e.g. id 4328 → 5 seasons, all with badges) |
+| Endpoint                                 | Assignment expects                                 | Live free tier (keys `3` and `123`)                                                            |
+| ---------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `all_leagues.php`                        | many leagues, several sports, `strLeagueAlternate` | 10 leagues (5 on the first check), all Soccer; fields `idLeague`, `strLeague`, `strSport` only |
+| `search_all_seasons.php?badge=1&id=<id>` | seasons with badges                                | works: `[{strSeason, strBadge}]` (e.g. id 4328 → 5 seasons, all with badges)                   |
 
 TheSportsDB docs: free tier caps all_leagues at 10 results and the seasons lookup at 5; premium raises both. CORS is open (`access-control-allow-origin: *`). The repo is on `master` with remote `origin` on GitHub.
 
@@ -31,7 +31,7 @@ TheSportsDB docs: free tier caps all_leagues at 10 results and the seasons looku
 
 - Stage 1 done: Catalyst adopted, mattpocock-skills routed.
 - Stage 2 done: decision 001 (init design) `Accepted`.
-- Stage 3 in progress: decision 002 (bootstrap) `Accepted` on `master`; next is step 1 (scaffold) on a new branch `decision/002-bootstrap-nuxt-skeleton`, following the six steps in the record.
+- Stage 3 in progress on `decision/002-bootstrap-nuxt-skeleton`: steps 1–3 of decision 002 committed (scaffold, data layer, tests and toolchain); next is step 4 (CI). Choices and issues met on the way are in the record's "As built" paragraph.
 - Stage 4 not started.
 
 ## Stages
