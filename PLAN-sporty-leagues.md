@@ -85,15 +85,23 @@ Flow: `catalyst/workflows/bootstrap.md` (weight `Medium`). Record `catalyst/deci
 
 ### Stage 4 — Feature: league list with filters and season badge
 
-Template `catalyst/features/_template.md`; sample `catalyst/examples/features/001_session-auth.md`. Draft `catalyst/features/001_league-list.md` (≤ 9,600 chars), get approval on `master`, then branch `feature/001-league-list`. Contract to draft:
+Contract: [`catalyst/features/001_league-list.md`](catalyst/features/001_league-list.md), `Approved` on `master` (a7ff0d9). Branch `feature/001-league-list` from `master` **after** the bootstrap branch merges. One approved commit per step; every step runs `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm test` before its commit is proposed. Tests are `*.test.ts`, colocated.
 
-- Fetch all leagues once per session (Pinia Colada, no refetch until reload); show League name, Sport, Alternate name (blank when absent). Mobile-first layout: single-column cards and stacked filters at phone width, grid from tablet up, stock Nuxt UI.
-- Name search (case-insensitive substring) and Sport dropdown (options derived from the loaded data, "All" default); both live in the URL query via one `useLeagueFilters` composable (`routing.md`, schema with `.catch()` defaults).
-- Click a League card to expand it and load the first season's badge for that `idLeague`; loading, error, and "no badge" states; second click collapses; badge cached per League for the session.
-- Fixture mode: `?source=fixture` serves a hand-written dataset (~20 leagues, 4–5 sports, some empty Alternate names, real TheSportsDB ids where they exist in the free tier, synthetic ids otherwise whose badge lookup the fixture also answers) with a persistent banner and a link to switch back; env var sets the default. `KNOWN_FAKES.md` row added in the same change.
-- Tests: filter logic, both query composables under MSW, one league-list component test with filters applied.
-- README: "AI tools" (Claude Code with Catalyst and mattpocock-skills, what they did) and "Design decisions" (link to the two records and the feature document, the free-tier finding, time spent vs the 90-minute budget).
-- Browser verification in the Vercel preview before merge; merge, flip to `Active`, delete the branch.
+Settled after approval (2026-10-07), folded into the document in step 1 (Same-Change Rule):
+
+- Both filters write the URL with `replace`, never `push` (`stacks/frontend/nuxt/routing.md`, Search params); the document's `router.push` for Sport is corrected.
+- The document's test paths say `.spec.ts`; the project uses `.test.ts`.
+- Debounce comes from `@vueuse/core`, an approved library of the Nuxt module; it is added to `package.json` directly.
+
+Steps:
+
+1. **Schemas, service, pure logic.** `app/services/leagues.api.ts`: Zod schemas (`leagues` nullable; `seasons` nullable, a string fails parsing; `strBadge` nullable; `strLeagueAlternate` optional), `fetchAllLeagues(signal)`, `fetchSeasons(idLeague, signal)`. `app/utils/filterLeagues.ts`: sort, search, Sport filter, Sport options, badge pick (most recent non-null). `filterLeagues.test.ts`. The document corrections above.
+2. **URL state and config.** `app/composables/useLeagueFilters.ts` (`q`, `sport`, `source` with `.catch()` defaults; `replace`; a source switch clears `sport`). Public runtime config `leagueSource` from `NUXT_PUBLIC_LEAGUE_SOURCE` (default `live`), validated in `app/plugins/validateConfig.ts`; `.env.example`. `@vueuse/core` added. `useLeagueFilters.test.ts`.
+3. **Queries and fixture.** `app/fixtures/leagues.ts`, lazy-imported: a verbatim transcription of `lookupleague.php` for the document's 19 ids (`idLeague`, `strLeague`, `strSport`, `strLeagueAlternate`), shaped `{ leagues: [...] }`, first line a `// !` comment naming its source and capture date; regenerate it from the live endpoint with a script and verify it field by field, never type it by hand. `app/services/queries/useLeagueQueries.ts`: key map, `useLeaguesQuery(source)`, `useSeasonBadgeQuery(idLeague, enabled)`, `staleTime` and `gcTime` `Infinity` with the reason in a comment (`data-layer.md`). `catalyst/KNOWN_FAKES.md` row. `useLeagueQueries.test.ts` (MSW): one request across remounts, none for the fixture list, seasons once across sources, string `seasons` and a plain-text 429 surface as errors.
+4. **List and filters UI.** `app/components/league/` `LeagueFilters`, `LeagueList`, `LeagueCard` (collapsed); `app/pages/index.vue` with loading skeletons, error + Retry, both empty states; single column at phone width, grid from tablet up. `LeagueList.test.ts` with filters applied.
+5. **Badge and banner.** Card expansion with `LeagueBadgePanel` (loading, badge + season label, no badge, image failure, error + Retry) and `FixtureBanner`; extend the component test. Update the `app/` folder document for `services/`, `fixtures/`, `components/league/`.
+6. **README.** "AI tools" and "Design decisions" sections.
+7. **Verify and merge.** Push; walk every Examples row on the Vercel preview at phone and desktop widths; fill the document's Verification section; flip it to `Active`; merge to `master`, delete the branch, update Progress.
 
 ## Decisions so far
 
