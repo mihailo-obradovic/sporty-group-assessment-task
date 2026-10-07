@@ -8,10 +8,11 @@ The whole frontend: a Nuxt 4 + Nuxt UI single-page app (`ssr: false`) built to s
 - `error.vue` — the one fatal-error page; renders what the raising site passes in `data`.
 - `pages/` — file-based routes; `index.vue` is the only page.
 - `composables/useAppQuery.ts` — the query wrapper every server read goes through.
+- `composables/useLeagueFilters.ts` — the page's filter and source state, parsed from and written to the URL query.
 - `utils/fetcher.ts` — the single HTTP client: base URL and API key from public runtime config.
 - `utils/parseResponse.ts` — Zod parse at the boundary; a mismatch throws `ResponseShapeError`.
 - `utils/handleApiError.ts` — the central error policy, a pure function.
-- `plugins/validateConfig.ts` — validates the public runtime config at startup.
+- `plugins/validateConfig.ts` — validates the public runtime config (API base URL and key, default League source) at startup.
 - `types/` — shared types (`api.d.ts`), domain schemas with their inferred types (`league.ts`), and the Pinia Colada error-type augmentation.
 - `assets/styles/main.css` — the global stylesheet (Tailwind + Nuxt UI); `.oxfmtrc.json` points at this path.
 - `testing/mswServer.ts` — the MSW server and its lifecycle, imported by any test that touches the network.

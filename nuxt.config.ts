@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       sportsdbBaseUrl: 'https://www.thesportsdb.com/api/v1/json',
-      sportsdbApiKey: '3'
+      sportsdbApiKey: '3',
+      leagueSource: 'live'
     }
   },
 
