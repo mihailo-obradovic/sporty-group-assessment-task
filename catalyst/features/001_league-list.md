@@ -57,21 +57,22 @@ Not role-specific.
 
 ## Examples
 
-| Input                                     | Expected Output                                                      | Notes                            |
-| ----------------------------------------- | -------------------------------------------------------------------- | -------------------------------- |
-| `/` (live free tier)                      | 10 Soccer Leagues; Alternate name blank; Sports: All, Soccer         | degraded tier                    |
-| `/?source=fixture`                        | 19 Leagues across 5 Sports; banner visible; count 19; Sample pressed | fixture mode                     |
-| `/?source=fixture&q=LEAGUE`               | Leagues whose name contains "league", any case                       | any case                         |
-| `/?source=fixture&sport=Basketball&q=nba` | Basketball Leagues whose name contains "nba"; count 2                | AND                              |
-| `/?q=league&sport=Soccer`, press Sample   | `?q=league&source=fixture`; banner visible; Sample pressed           | toggle keeps `q`, resets `sport` |
-| `/?sport=Basketball` (live)               | empty state with Clear filters; select shows Basketball              | unknown Sport kept               |
-| `/?source=bogus`                          | env-default source                                                   | `.catch()` default               |
-| expand 4328 (English Premier League)      | loading plate, then the latest badged season's image + label         |                                  |
-| expand 4329 (no season has a badge)       | "No badge for this League"                                           | real live case                   |
-| expand, collapse, expand                  | badge shown, no second request                                       | cached per League                |
-| expand in fixture, switch to live, expand | no second request                                                    | key is `idLeague`                |
-| badge image fails to load                 | "No badge" with "image could not load"                               | no retry, no toast               |
-| seasons request fails or 429              | in-card error with Retry; toast                                      | other cards unaffected           |
+| Input                                     | Expected Output                                                                       | Notes                            |
+| ----------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------- |
+| `/` (live free tier)                      | 10 Soccer Leagues; Alternate name blank; Sports: All, Soccer                          | degraded tier                    |
+| `/?source=fixture`                        | 19 Leagues across 5 Sports; banner visible; count 19; Sample pressed                  | fixture mode                     |
+| `/?source=fixture&q=LEAGUE`               | Leagues whose name contains "league", any case                                        | any case                         |
+| `/?source=fixture&sport=Basketball&q=nba` | Basketball Leagues whose name contains "nba"; count 2                                 | AND                              |
+| `/?q=league&sport=Soccer`, press Sample   | `?q=league&source=fixture`; banner visible; Sample pressed                            | toggle keeps `q`, resets `sport` |
+| `/?sport=Basketball` (live)               | empty state with Clear filters; select shows Basketball                               | unknown Sport kept               |
+| `/?source=bogus`                          | env-default source                                                                    | `.catch()` default               |
+| expand 4328 (English Premier League)      | loading plate, then the latest badged season's image + label                          |                                  |
+| expand 4329 (no season has a badge)       | "No badge for this League"                                                            | real live case                   |
+| expand, collapse, expand                  | badge shown, no second request                                                        | cached per League                |
+| expand in fixture, switch to live, expand | no second request                                                                     | key is `idLeague`                |
+| badge image fails to load                 | "No badge" with "image could not load"                                                | no retry, no toast               |
+| seasons request fails or 429              | in-card error with Retry; toast                                                       | other cards unaffected           |
+| seasons request answers 429 (plain text)  | toast "TheSportsDB is rate limiting requests. Try again in a minute."; no URL or body | toast text                       |
 
 ## Business Rules
 
@@ -97,6 +98,7 @@ Not role-specific.
 ## Error Handling
 
 - Any request or shape failure (`ResponseShapeError` included) → the list's or the card's error state with Retry, plus one toast through the central policy (decision 002).
+- The toast speaks the user's terms: a 429 says "TheSportsDB is rate limiting requests. Try again in a minute.", any other request failure the generic message. It never shows a URL, a status line, or a response body.
 - Badge image load failure → "no badge" with a note; no toast.
 
 ## Entry Points
@@ -125,6 +127,7 @@ Not role-specific.
 - `app/services/leagues.api.test.ts` (MSW): blank Alternate name (missing, `null`, `""`); `leagues: null` and `seasons: null` → none; string `seasons` and a League missing a field → `ResponseShapeError`.
 - `app/composables/useLeagueFilters.test.ts`: defaults and `.catch()` fallbacks; both filters `replace`, never `push`; source switch clears `sport`.
 - `app/services/queries/useLeagueQueries.test.ts` (MSW): one all-leagues request across remounts; fixture source makes no all-leagues request; seasons once per League across sources; string `seasons` and 429 surface as errors.
+- `app/utils/handleApiError.test.ts`: a 429 toasts the rate-limit message and other failures the generic one, never ofetch's request line or the body; one toast per error.
 - `app/components/league/LeagueList.test.ts` (the page, MSW): with filters applied only matches render, and the count follows; unknown Sport kept; both empty states and Clear filters; debounced search reaches the URL; error and Retry; badge panel states; banner; the source toggle.
 - Browser walk of the Examples on the Vercel preview at phone and desktop widths.
 
