@@ -20,6 +20,8 @@ export const SeasonSchema = z.object({
 
 export type Season = z.infer<typeof SeasonSchema>;
 
+export type SeasonBadge = Season & { strBadge: string };
+
 // * `fixture` swaps in the registered sample list for the degraded free tier (decision 001, KNOWN_FAKES.md)
 export const LeagueSourceSchema = z.enum(['live', 'fixture']);
 

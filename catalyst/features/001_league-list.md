@@ -101,7 +101,7 @@ Not role-specific.
 - `app/composables/useLeagueFilters.ts`: URL state schema and setters.
 - `app/types/league.ts`: League and Season schemas and their types.
 - `app/services/leagues.api.ts`: response envelope schemas and fetch functions.
-- `app/services/queries/useLeagueQueries.ts`: `useLeaguesQuery(source)`, `useSeasonBadgeQuery(idLeague, enabled)`.
+- `app/services/queries/useLeagueQueries.ts`: `useLeaguesQuery(source)`, `useSeasonBadgeQuery(idLeague, { enabled })`.
 - `app/utils/filterLeagues.ts`: pure sort, filter, Sport options, badge pick.
 - `app/components/league/`: card, list, filters, badge panel, fixture banner.
 - `app/fixtures/leagues.ts`: the fixture list (`KNOWN_FAKES.md`).

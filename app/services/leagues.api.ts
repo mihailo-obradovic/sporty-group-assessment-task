@@ -23,6 +23,14 @@ export async function fetchAllLeagues(signal?: AbortSignal): Promise<League[]> {
   return leagues ?? [];
 }
 
+// * Lazy, so the live path never downloads the fixture; it passes the same schema as the live response
+export async function loadFixtureLeagues(): Promise<League[]> {
+  const { leaguesFixture } = await import('@/fixtures/leagues');
+  const { leagues } = parseResponse(AllLeaguesResponseSchema, leaguesFixture);
+
+  return leagues ?? [];
+}
+
 export async function fetchSeasons(
   idLeague: string,
   signal?: AbortSignal

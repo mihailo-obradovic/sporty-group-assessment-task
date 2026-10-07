@@ -1,4 +1,4 @@
-import type { League, Season } from '@/types/league';
+import type { League, Season, SeasonBadge } from '@/types/league';
 
 export type LeagueFilters = {
   q: string;
@@ -30,11 +30,10 @@ export function listSports(leagues: readonly League[]): string[] {
 // * The API lists seasons oldest first, so the last badged one is the most recent
 export function pickSeasonBadge(
   seasons: readonly Season[]
-): (Season & { strBadge: string }) | null {
+): SeasonBadge | null {
   return (
     seasons.findLast(
-      (season): season is Season & { strBadge: string } =>
-        season.strBadge !== null
+      (season): season is SeasonBadge => season.strBadge !== null
     ) ?? null
   );
 }
