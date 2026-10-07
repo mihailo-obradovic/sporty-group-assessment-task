@@ -49,11 +49,12 @@ Pointer index of protections declared in lazy-loaded feature/decision documents.
 
 One row per layer: the module chosen from Catalyst's `stacks/`, plus UI choices, adopted addons, and any optional layer. Filled at spawn; tells an agent which stack documents apply (`architecture.md` has the index).
 
-| Layer       | Module         |
-| ----------- | -------------- |
-| ci          | github-actions |
-| frontend    | nuxt           |
-| frontend/ui | nuxtui         |
+| Layer       | Module                                    |
+| ----------- | ----------------------------------------- |
+| ci          | github-actions                            |
+| frontend    | nuxt                                      |
+| frontend/ui | nuxtui                                    |
+| hosting     | vercel (no Catalyst module; decision 001) |
 
 ## Status Values
 
