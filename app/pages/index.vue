@@ -2,6 +2,9 @@
   <u-container class="flex flex-col gap-6 py-8">
     <h1 class="text-2xl font-semibold">Sporty leagues</h1>
 
+    <!-- ! The fixture list is never shown without this banner (feature 001, KNOWN_FAKES.md) -->
+    <FixtureBanner v-if="isFixture" />
+
     <LeagueFilters :sports="sports" />
 
     <ul
@@ -38,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import FixtureBanner from '@/components/league/FixtureBanner.vue';
 import LeagueFilters from '@/components/league/LeagueFilters.vue';
 import LeagueList from '@/components/league/LeagueList.vue';
 
@@ -50,6 +54,7 @@ const SKELETON_COUNT = 6;
 const { filters, clearFilters } = useLeagueFilters();
 
 const source = computed(() => filters.value.source);
+const isFixture = computed(() => source.value === 'fixture');
 const {
   data: leagues,
   error,

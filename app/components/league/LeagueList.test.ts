@@ -44,6 +44,38 @@ function serveLeaguesJson(body: JsonBodyType) {
   return serveLeagues(() => HttpResponse.json(body));
 }
 
+// * Counts seasons lookups per League id, answering each with `respond(id)`
+function serveSeasons(respond: (idLeague: string) => Response) {
+  const { sportsdbBaseUrl, sportsdbApiKey } = useRuntimeConfig().public;
+  const requests: string[] = [];
+
+  mswServer.use(
+    http.get(
+      `${sportsdbBaseUrl}/${sportsdbApiKey}/search_all_seasons.php`,
+      ({ request }) => {
+        const idLeague = new URL(request.url).searchParams.get('id') ?? '';
+        requests.push(idLeague);
+
+        return respond(idLeague);
+      }
+    )
+  );
+
+  return requests;
+}
+
+const BADGED_SEASONS = {
+  seasons: [
+    { strSeason: '2019-2020', strBadge: 'https://example.test/2019.png' },
+    { strSeason: '2020-2021', strBadge: 'https://example.test/2020.png' },
+    { strSeason: '2021-2022', strBadge: null }
+  ]
+};
+
+function cardToggle(name: string): HTMLElement {
+  return screen.getByRole('button', { name: new RegExp(name) });
+}
+
 async function renderPage(query: Record<string, string> = {}) {
   // * renderSuspended navigates to its own `route` (default `/`), so the query goes through it
   await renderSuspended(IndexPage, { route: { path: '/', query } });
@@ -166,5 +198,154 @@ describe('League list page', () => {
 
     expect(await findLeagueNames()).toHaveLength(3);
     expect(counter.requests).toBe(2);
+  });
+
+  it('reveals the most recent badged season on expand, and collapses on a second click', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    serveSeasons(() => HttpResponse.json(BADGED_SEASONS));
+    await renderPage();
+    await findLeagueNames();
+
+    const toggle = cardToggle('English Premier League');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+
+    await fireEvent.click(toggle);
+
+    const badge = await screen.findByRole('img', {
+      name: 'English Premier League badge, 2020-2021'
+    });
+    expect(badge.getAttribute('src')).toBe('https://example.test/2020.png');
+    expect(screen.getByText('2020-2021')).toBeTruthy();
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+
+    await fireEvent.click(toggle);
+
+    expect(screen.queryByRole('img')).toBeNull();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('shows the cached badge on re-expanding, without a second request', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    const requests = serveSeasons(() => HttpResponse.json(BADGED_SEASONS));
+    await renderPage();
+    await findLeagueNames();
+    const toggle = cardToggle('English Premier League');
+
+    await fireEvent.click(toggle);
+    await screen.findByRole('img');
+    await fireEvent.click(toggle);
+    await fireEvent.click(toggle);
+
+    expect(screen.getByRole('img')).toBeTruthy();
+    expect(requests).toEqual(['4328']);
+  });
+
+  it('keeps several cards open at once', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    serveSeasons(() => HttpResponse.json(BADGED_SEASONS));
+    await renderPage();
+    await findLeagueNames();
+
+    await fireEvent.click(cardToggle('English Premier League'));
+    await fireEvent.click(cardToggle('German Bundesliga'));
+
+    await vi.waitFor(() => expect(screen.getAllByRole('img')).toHaveLength(2));
+  });
+
+  it('says there is no badge when no season has one', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    serveSeasons(() =>
+      HttpResponse.json({
+        seasons: [{ strSeason: '1892-1893', strBadge: null }]
+      })
+    );
+    await renderPage();
+    await findLeagueNames();
+
+    await fireEvent.click(cardToggle('English League Championship'));
+
+    expect(await screen.findByText('No badge for this League')).toBeTruthy();
+  });
+
+  it('says the image could not load when the badge fails, without a toast-worthy error', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    serveSeasons(() => HttpResponse.json(BADGED_SEASONS));
+    await renderPage();
+    await findLeagueNames();
+
+    await fireEvent.click(cardToggle('English Premier League'));
+    await fireEvent.error(await screen.findByRole('img'));
+
+    expect(screen.getByText('No badge for this League')).toBeTruthy();
+    expect(screen.getByText('The image could not load.')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Retry' })).toBeNull();
+  });
+
+  it('shows an in-card error with Retry when the lookup fails, leaving other cards alone', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    let fail = true;
+    const requests = serveSeasons((idLeague) =>
+      fail && idLeague === '4328'
+        ? new HttpResponse('error code: 1015', {
+            status: 429,
+            headers: { 'Content-Type': 'text/plain' }
+          })
+        : HttpResponse.json(BADGED_SEASONS)
+    );
+    await renderPage();
+    await findLeagueNames();
+
+    await fireEvent.click(cardToggle('English Premier League'));
+    await fireEvent.click(cardToggle('German Bundesliga'));
+
+    expect(
+      await screen.findByText('Could not load the season badge')
+    ).toBeTruthy();
+    expect(
+      await screen.findByRole('img', { name: /German Bundesliga badge/ })
+    ).toBeTruthy();
+
+    fail = false;
+    await fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    expect(
+      await screen.findByRole('img', { name: /English Premier League badge/ })
+    ).toBeTruthy();
+    expect(requests.filter((id) => id === '4328')).toHaveLength(2);
+  });
+});
+
+describe('Fixture banner', () => {
+  afterEach(() => {
+    cleanup();
+    const queryCache = useQueryCache();
+
+    for (const entry of queryCache.getEntries()) {
+      queryCache.remove(entry);
+    }
+  });
+
+  it('is absent on the live list', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    await renderPage();
+    await findLeagueNames();
+
+    expect(screen.queryByText('Sample data')).toBeNull();
+  });
+
+  it('shows with the fixture list and switches to live, keeping the search and clearing the Sport', async () => {
+    serveLeaguesJson(LIVE_LEAGUES);
+    await renderPage({ source: 'fixture', q: 'league', sport: 'Rugby' });
+
+    expect(await screen.findByText('Sample data')).toBeTruthy();
+
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Show live data' })
+    );
+
+    await vi.waitFor(() =>
+      expect(useRoute().query).toEqual({ q: 'league', source: 'live' })
+    );
+    expect(screen.queryByText('Sample data')).toBeNull();
   });
 });
